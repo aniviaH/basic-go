@@ -5,7 +5,13 @@ func main() {
 	//ForSlice()
 	//ForMap()
 
-	LoopBug()
+	//LoopBug()
 
-	LoopBug2()
+	//LoopBug2()
+
+	//LoopContinue()
+
+	//Switch(4)
+	//SwitchBool(10)
+	SwitchAny(18)
 }
