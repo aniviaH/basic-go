@@ -78,7 +78,7 @@ func DemoComparable(u User) {
 		fmt.Println("case User{}")
 	case User{name: "张三", abc: [1]int{1}}:
 		fmt.Println("case User{name: 张三}")
-	case User{name: "liuh"}:
+	case User{name: "李四"}:
 
 	}
 }

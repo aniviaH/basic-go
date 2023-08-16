@@ -13,5 +13,7 @@ func main() {
 
 	//Map2()
 
-	DemoComparable(User{name: "张三", abc: [1]int{1}})
+	//DemoComparable(User{name: "张三", abc: [1]int{1}})
+
+	UseSumInt64()
 }
