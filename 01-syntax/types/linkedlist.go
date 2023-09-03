@@ -1,5 +1,7 @@
 package main
 
+import "time"
+
 /**
 结构体定义
 
@@ -20,19 +22,43 @@ type LinkedList struct {
 
 	// 这个就是包外可以访问
 	Len int
+
+	CreateTime time.Time
 }
+
+func (l *LinkedList) Add(idx int, val any) error {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (l *LinkedList) Append(val any) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (l *LinkedList) Delete(idx int) (any, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+func (l *LinkedList) toSlice() ([]any, error) {
+	//TODO implement me
+	panic("implement me")
+}
+
+//// 结构体接收器
+//func (l LinkedList) Add(index int, val any) error {
+//	// TODO implement me
+//	return nil
+//}
+//
+//// 指针接收器
+//func (l *LinkedList) Add1(index int, val any) error {
+//	// TODO implement me
+//	return nil
+//}
 
 type node struct {
-}
-
-// 结构体接收器
-func (l LinkedList) Add(index int, val any) error {
-	// TODO implement me
-	return nil
-}
-
-// 指针接收器
-func (l *LinkedList) Add1(index int, val any) error {
-	// TODO implement me
-	return nil
+	prev *node
+	next *node
 }
