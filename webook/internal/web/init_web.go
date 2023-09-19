@@ -1,14 +1,19 @@
-package main
+package web
 
 import (
-	"github.com/aniviaH/basic-go/webook/internal/web"
 	"github.com/gin-gonic/gin"
 )
 
-func RegisterRoutes() *gin.Engine {
-	server := gin.Default()
+//func RegisterRoutes() *gin.Engine {
+//	server := gin.Default()
+//
+//	registerUserRoutes(server)
+//
+//	return server
+//}
 
-	u := &web.UserHandler{}
+func registerUserRoutes(server *gin.Engine) {
+	u := &UserHandler{}
 
 	// 注册
 	//server.POST("/users/signup", func(context *gin.Context) {
@@ -47,6 +52,4 @@ func RegisterRoutes() *gin.Engine {
 	server.GET("/users/profile", u.Profile)
 
 	//server.Run(":8080")
-
-	return server
 }
