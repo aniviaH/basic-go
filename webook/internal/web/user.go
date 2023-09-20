@@ -22,7 +22,7 @@ func (u *UserHandler) RegisterRoutes(server *gin.Engine) {
 	//server.PUT("/user", func(context *gin.Context) {
 	//
 	//})
-	server.POST("/users/signup", u.Gignup)
+	server.POST("/users/signup", u.Signup)
 
 	// 登录
 	//server.POST("/users/signin", func(context *gin.Context) {
@@ -51,9 +51,14 @@ func (u *UserHandler) RegisterRoutes(server *gin.Engine) {
 	server.GET("/users/profile", u.Profile)
 
 	//server.Run(":8080")
+
+	// 分组路由
+	ug := server.Group("/users")
+	ug.GET("/profile1", u.Profile)
+	ug.POST("/signup2", u.Signup)
 }
 
-func (u *UserHandler) Gignup(ctx *gin.Context) {
+func (u *UserHandler) Signup(ctx *gin.Context) {
 
 }
 
