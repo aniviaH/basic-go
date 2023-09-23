@@ -1,9 +1,36 @@
 package web
 
-import "github.com/gin-gonic/gin"
+import (
+	"fmt"
+	regexp "github.com/dlclark/regexp2"
+	"github.com/gin-gonic/gin"
+	"net/http"
+)
 
 // UserHandler 我准备在它上面定义跟用户有关的路由
 type UserHandler struct {
+	//github.com/dlclark/regexp2
+	emailExp    *regexp.Regexp
+	passwordExp *regexp.Regexp
+}
+
+func NewUserHanddler() *UserHandler {
+	// 预编译正则表达式来提高校验速度。
+	//return &UserHandler{
+	//	emailExp:    regexp.MustCompile(emailRegexPattern, regexp.None),
+	//	passwordExp: regexp.MustCompile(passwordRegexPattern, regexp.None),
+	//}
+
+	const (
+		emailRegexPattern    = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$"
+		passwordRegexPattern = `^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$`
+	)
+	emailExp := regexp.MustCompile(emailRegexPattern, regexp.None)
+	passwordExp := regexp.MustCompile(passwordRegexPattern, regexp.None)
+	return &UserHandler{
+		emailExp:    emailExp,
+		passwordExp: passwordExp,
+	}
 }
 
 //func (u UserHandler) RegisterRoutes(server *gin.Engine) {
@@ -54,16 +81,74 @@ func (u *UserHandler) RegisterRoutes(server *gin.Engine) {
 
 	// 分组路由
 	ug := server.Group("/users")
-	ug.GET("/profile1", u.Profile)
-	ug.POST("/signup2", u.Signup)
+	ug.GET("/profile1", u.Profile) // /users/profile1
+	ug.POST("/signup2", u.Signup)  // /users/signup2
 }
 
 func (u *UserHandler) Signup(ctx *gin.Context) {
+	//ctx.String(http.StatusOK, "hello, 你在注册")
+	type SignUpReq struct {
+		// tag 字段的附带信息
+		Email           string `json:"email"`
+		ConfirmPassword string `json:"confirmPassword"`
+		Password        string `json:"password"`
+	}
 
+	var req SignUpReq
+	// Bind方法会根据 Content-Type 来解析你的数据到 req 里面
+	// 解析错了，就会直接写回一个 400 的错误
+	if err := ctx.Bind(&req); err != nil {
+		return
+	}
+	// 拿到数据
+	fmt.Printf("req: %v", req)
+
+	//const (
+	//	emailRegexPattern    = "^\\w+([-+.]\\w+)*@\\w+([-.]\\w+)*\\.\\w+([-.]\\w+)*$"
+	//	passwordRegexPattern = `^(?=.*[A-Za-z])(?=.*\d)(?=.*[$@$!%*#?&])[A-Za-z\d$@$!%*#?&]{8,}$`
+	//)
+	//ok, err = regexp.Match(emailRegexPattern, []byte(req.Email))
+	// 使用 https://github.com/dlclark/regexp2
+	//emailExp := regexp.MustCompile(emailRegexPattern, regexp.None)
+	//ok, err := emailExp.MatchString(req.Email)
+	// 使用预编译
+	ok, err := u.emailExp.MatchString(req.Email)
+	if err != nil {
+		// 你的正则表达式不对，才会出现error
+		//ctx.String(http.StatusInternalServerError, "系统错误")
+		ctx.String(http.StatusOK, "系统错误")
+		return
+	}
+	if !ok {
+		//ctx.String(http.StatusBadRequest, "你的邮箱格式不对")
+		ctx.String(http.StatusOK, "你的邮箱格式不对")
+		return
+	}
+	if req.ConfirmPassword != req.Password {
+		ctx.String(http.StatusOK, "两次输入的密码不一致")
+		return
+	}
+	//ok, err = regexp.Match(passwordRegexPattern, []byte(req.Password))
+	// 使用 https://github.com/dlclark/regexp2
+	//passwordExp := regexp.MustCompile(passwordRegexPattern, regexp.None)
+	//ok, err = passwordExp.MatchString(req.Password)
+	// 使用预编译
+	ok, err = u.passwordExp.MatchString(req.Password)
+	if err != nil {
+		// 记录日志
+		ctx.String(http.StatusOK, "系统错误")
+		return
+	}
+	if !ok {
+		ctx.String(http.StatusOK, "密码必须大于8位，包含数字、字母、特殊字符")
+		return
+	}
+	ctx.String(http.StatusOK, "注册成功")
+	// 这边就是数据库操作
+	//fmt.Println("req:", req)
 }
 
 func (u *UserHandler) Signin(ctx *gin.Context) {
-
 }
 
 func (u *UserHandler) Edit(ctx *gin.Context) {
