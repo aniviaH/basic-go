@@ -7,6 +7,7 @@ const onFinish = (values: any) => {
     axios.post("/users/signup", values)
         .then((res) => {
             if(res.status != 200) {
+                console.log(res)
                 alert(res.statusText);
                 return
             }
