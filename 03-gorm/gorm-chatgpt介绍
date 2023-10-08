@@ -1,0 +1,59 @@
+GORM（Go Object Relational Mapping）是一个用于Go语言的简单而强大的ORM库，用于简化数据库操作。它提供了一种简单的方式来映射Go结构体和数据库表，以及执行CRUD（创建、读取、更新和删除）操作。
+
+以下是一些关于GORM的重要特点和用法：
+
+1. 数据库支持：GORM支持多种数据库，包括MySQL、PostgreSQL、SQLite和SQL Server等。
+
+2. 模型定义：可以使用结构体定义数据库表的模型，结构体的字段与表的列相对应。
+
+3. 数据库迁移：GORM提供了数据库迁移工具，可以自动创建和更新数据库表结构。
+
+4. 查询构建器：可以使用链式调用来构建复杂的查询，包括条件查询、排序、分页等。
+
+下面是一个简单的示例代码，演示了如何使用GORM进行数据库操作：
+
+```go
+package main
+
+import (
+	"fmt"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
+)
+
+type User struct {
+	ID   uint
+	Name string
+	Age  int
+}
+
+func main() {
+	dsn := "user:password@tcp(127.0.0.1:3306)/dbname?charset=utf8mb4&parseTime=True&loc=Local"
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
+	if err != nil {
+		panic("failed to connect database")
+	}
+
+	// 创建表
+	db.AutoMigrate(&User{})
+
+	// 创建记录
+	user := User{Name: "Alice", Age: 25}
+	db.Create(&user)
+
+	// 查询记录
+	var result User
+	db.First(&result, user.ID)
+	fmt.Println(result)
+
+	// 更新记录
+	db.Model(&result).Update("Age", 26)
+
+	// 删除记录
+	db.Delete(&result)
+}
+```
+
+这只是一个简单的例子，你可以在GORM的官方文档中找到更多关于GORM的详细信息和用法：https://gorm.io/
+
+你还可以在GORM的GitHub仓
