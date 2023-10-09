@@ -2,9 +2,14 @@ package main
 
 import (
 	"fmt"
-	"gorm.io/driver/sqlite"
+	"gorm.io/driver/mysql"
+	//"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
 )
+
+/**
+gorm官网：https://gorm.io/docs/
+*/
 
 type Product struct {
 	gorm.Model
@@ -14,9 +19,21 @@ type Product struct {
 
 func main() {
 	fmt.Println("aaaaaa")
-	db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{
-		//DryRun: true, // DryRun generate sql without execute
-	})
+	/**
+	使用sqlite
+	https://gorm.io/docs/
+	*/
+	//db, err := gorm.Open(sqlite.Open("test.db"), &gorm.Config{
+	//	//DryRun: true, // DryRun generate sql without execute
+	//})
+
+	/**
+	使用mysql
+	https://gorm.io/docs/connecting_to_the_database.html#Customize-Driver
+	https://github.com/go-sql-driver/mysql#dsn-data-source-name
+	*/
+	dsn := "root:anivia@930511@tcp(localhost:3306)/geektime-basic-go"
+	db, err := gorm.Open(mysql.Open(dsn), &gorm.Config{})
 	if err != nil {
 		panic("failed to connect database")
 	}
@@ -35,7 +52,7 @@ func main() {
 
 	// Read 查询
 	var product Product
-	db.First(&product, 8)                  // find product with integer primary key
+	db.First(&product, 3)                  // find product with integer primary key
 	db.First(&product, "code = ?", "D442") // find product with code D42
 	fmt.Println("product:", product)
 
@@ -48,5 +65,5 @@ func main() {
 	db.Model(&product).Updates(map[string]interface{}{"Price": 4000, "Code": "F43"})
 
 	// Delete - delete product
-	db.Delete(&product, 1)
+	db.Delete(&product, 3)
 }
