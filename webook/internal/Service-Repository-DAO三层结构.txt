@@ -1,0 +1,24 @@
+引入 Service - Repostiory - DAO 三层结构
+
+这里我们直接引入 Service - Repository - DAO 三
+层结构。其中 service、repostory 参考的是 DDD
+设计。
+
+service: 代表的是领域服务（domain service），
+代表一个业务的完整的处理过程。
+
+repository：按照 DDD 的说法，是代表领域对象的
+存储，这里你直观理解为存储数据的抽象。
+
+dao: 代表的是数据库操作。
+
+同时，我们还需要一个 domain，代表领域对象。
+
+
+如何理解这些东西？
+• 为什么有 repository 之后，还要有 dao？repository 是一个整体抽象，
+它里面既可以考虑用ElasticSearch，也可以考虑使用 MySQL，还可以考虑用 MongoDB。
+所以它只代表数据存储，但是不代表数据库。
+• service 是拿来干嘛的？简单来说，就是组合各种 repository、domain，
+偶尔也会组合别的 service，来共同完成一个业务功能。
+• domain 又是什么？它被认为是业务在系统中的直接反应，或者你直接理解为一个业务对象，又或者就是一个现实对象在程序中的反应。
