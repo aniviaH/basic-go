@@ -2,6 +2,7 @@ package web
 
 import (
 	"fmt"
+	"github.com/aniviaH/basic-go/webook/internal/service"
 	regexp "github.com/dlclark/regexp2"
 	"github.com/gin-gonic/gin"
 	"net/http"
@@ -9,12 +10,13 @@ import (
 
 // UserHandler 我准备在它上面定义跟用户有关的路由
 type UserHandler struct {
+	svc *service.UserService
 	//github.com/dlclark/regexp2
 	emailExp    *regexp.Regexp
 	passwordExp *regexp.Regexp
 }
 
-func NewUserHanddler() *UserHandler {
+func NewUserHanddler(svc *service.UserService) *UserHandler {
 	// 预编译正则表达式来提高校验速度。
 	//return &UserHandler{
 	//	emailExp:    regexp.MustCompile(emailRegexPattern, regexp.None),
@@ -28,6 +30,7 @@ func NewUserHanddler() *UserHandler {
 	emailExp := regexp.MustCompile(emailRegexPattern, regexp.None)
 	passwordExp := regexp.MustCompile(passwordRegexPattern, regexp.None)
 	return &UserHandler{
+		svc:         svc,
 		emailExp:    emailExp,
 		passwordExp: passwordExp,
 	}
@@ -90,8 +93,8 @@ func (u *UserHandler) Signup(ctx *gin.Context) {
 	type SignUpReq struct {
 		// tag 字段的附带信息
 		Email           string `json:"email"`
-		ConfirmPassword string `json:"confirmPassword"`
 		Password        string `json:"password"`
+		ConfirmPassword string `json:"confirmPassword"`
 	}
 
 	var req SignUpReq
@@ -150,6 +153,9 @@ func (u *UserHandler) Signup(ctx *gin.Context) {
 	// 考虑一下，能不能直接在 UserHanlder 里面操作数据库？
 	// 不能。因为 Handler 只是负责和 HTTP 有关的东西。我们需要一个代表数据库抽象的东西。
 	//db := gorm.Open()
+
+	// 通过service层信息，调用一下 svc 的方法
+	u.svc.Signup()
 }
 
 func (u *UserHandler) Signin(ctx *gin.Context) {
