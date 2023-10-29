@@ -7,7 +7,7 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: root
     volumes:
-      # 设置初始化脚本
+      # 设置初始化脚本 - 本地的文件夹(前面路径)，映射到生成容器的内部文件夹(后面路径)
       - ./script/mysql/:/docker-entrypoint-initdb.d/
     ports:
       # 注意这里我映射了 13316 端口

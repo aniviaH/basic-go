@@ -146,6 +146,10 @@ func (u *UserHandler) Signup(ctx *gin.Context) {
 	ctx.String(http.StatusOK, "注册成功")
 	// 这边就是数据库操作
 	//fmt.Println("req:", req)
+
+	// 考虑一下，能不能直接在 UserHanlder 里面操作数据库？
+	// 不能。因为 Handler 只是负责和 HTTP 有关的东西。我们需要一个代表数据库抽象的东西。
+	//db := gorm.Open()
 }
 
 func (u *UserHandler) Signin(ctx *gin.Context) {

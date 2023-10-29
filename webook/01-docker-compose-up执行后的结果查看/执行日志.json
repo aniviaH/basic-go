@@ -1,0 +1,47 @@
+2023-10-29 11:43:33 2023-10-29 03:43:33+00:00 [Note] [Entrypoint]: Entrypoint script for MySQL Server 8.0.29-1.el8 started.
+2023-10-29 11:43:33 2023-10-29 03:43:33+00:00 [Note] [Entrypoint]: Switching to dedicated user 'mysql'
+2023-10-29 11:43:33 2023-10-29 03:43:33+00:00 [Note] [Entrypoint]: Entrypoint script for MySQL Server 8.0.29-1.el8 started.
+2023-10-29 11:43:33 2023-10-29 03:43:33+00:00 [Note] [Entrypoint]: Initializing database files
+2023-10-29 11:44:15 2023-10-29 03:44:15+00:00 [Note] [Entrypoint]: Database files initialized
+2023-10-29 11:44:15 2023-10-29 03:44:15+00:00 [Note] [Entrypoint]: Starting temporary server
+2023-10-29 11:44:18 2023-10-29 03:44:18+00:00 [Note] [Entrypoint]: Temporary server started.
+2023-10-29 11:44:18 '/var/lib/mysql/mysql.sock' -> '/var/run/mysqld/mysqld.sock'
+2023-10-29 11:44:20
+2023-10-29 11:44:20 2023-10-29 03:44:20+00:00 [Note] [Entrypoint]: /usr/local/bin/docker-entrypoint.sh: running /docker-entrypoint-initdb.d/init.sql
+2023-10-29 11:44:20
+2023-10-29 11:44:20
+2023-10-29 11:44:20 2023-10-29 03:44:20+00:00 [Note] [Entrypoint]: Stopping temporary server
+2023-10-29 11:44:27 2023-10-29 03:44:27+00:00 [Note] [Entrypoint]: Temporary server stopped
+2023-10-29 11:44:27
+2023-10-29 11:44:27 2023-10-29 03:44:27+00:00 [Note] [Entrypoint]: MySQL init process done. Ready for start up.
+2023-10-29 11:44:27
+2023-10-29 11:43:33 2023-10-29T03:43:33.776136Z 0 [Warning] [MY-010918] [Server] 'default_authentication_plugin' is deprecated and will be removed in a future release. Please use authentication_policy instead.
+2023-10-29 11:43:33 2023-10-29T03:43:33.776184Z 0 [System] [MY-013169] [Server] /usr/sbin/mysqld (mysqld 8.0.29) initializing of server in progress as process 42
+2023-10-29 11:43:33 2023-10-29T03:43:33.788064Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+2023-10-29 11:43:39 2023-10-29T03:43:39.217156Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+2023-10-29 11:44:08 2023-10-29T03:44:08.505974Z 6 [Warning] [MY-010453] [Server] root@localhost is created with an empty password ! Please consider switching off the --initialize-insecure option.
+2023-10-29 11:44:16 2023-10-29T03:44:15.917853Z 0 [Warning] [MY-010918] [Server] 'default_authentication_plugin' is deprecated and will be removed in a future release. Please use authentication_policy instead.
+2023-10-29 11:44:16 2023-10-29T03:44:15.917908Z 0 [System] [MY-010116] [Server] /usr/sbin/mysqld (mysqld 8.0.29) starting as process 91
+2023-10-29 11:44:16 2023-10-29T03:44:16.054424Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+2023-10-29 11:44:17 2023-10-29T03:44:17.433747Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+2023-10-29 11:44:18 2023-10-29T03:44:18.007106Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2023-10-29 11:44:18 2023-10-29T03:44:18.007153Z 0 [System] [MY-013602] [Server] Channel mysql_main configured to support TLS. Encrypted connections are now supported for this channel.
+2023-10-29 11:44:18 2023-10-29T03:44:18.107389Z 0 [Warning] [MY-011810] [Server] Insecure configuration for --pid-file: Location '/var/run/mysqld' in the path is accessible to all OS users. Consider choosing a different directory.
+2023-10-29 11:44:18 2023-10-29T03:44:18.128256Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Socket: /var/run/mysqld/mysqlx.sock
+2023-10-29 11:44:18 2023-10-29T03:44:18.128482Z 0 [System] [MY-010931] [Server] /usr/sbin/mysqld: ready for connections. Version: '8.0.29'  socket: '/var/run/mysqld/mysqld.sock'  port: 0  MySQL Community Server - GPL.
+2023-10-29 11:44:19 Warning: Unable to load '/usr/share/zoneinfo/iso3166.tab' as time zone. Skipping it.
+2023-10-29 11:44:19 Warning: Unable to load '/usr/share/zoneinfo/leapseconds' as time zone. Skipping it.
+2023-10-29 11:44:20 Warning: Unable to load '/usr/share/zoneinfo/tzdata.zi' as time zone. Skipping it.
+2023-10-29 11:44:20 Warning: Unable to load '/usr/share/zoneinfo/zone.tab' as time zone. Skipping it.
+2023-10-29 11:44:20 Warning: Unable to load '/usr/share/zoneinfo/zone1970.tab' as time zone. Skipping it.
+2023-10-29 11:44:20 2023-10-29T03:44:20.869747Z 11 [System] [MY-013172] [Server] Received SHUTDOWN from user root. Shutting down mysqld (Version: 8.0.29).
+2023-10-29 11:44:27 2023-10-29T03:44:27.475269Z 0 [System] [MY-010910] [Server] /usr/sbin/mysqld: Shutdown complete (mysqld 8.0.29)  MySQL Community Server - GPL.
+2023-10-29 11:44:28 2023-10-29T03:44:28.094073Z 0 [Warning] [MY-010918] [Server] 'default_authentication_plugin' is deprecated and will be removed in a future release. Please use authentication_policy instead.
+2023-10-29 11:44:28 2023-10-29T03:44:28.094088Z 0 [System] [MY-010116] [Server] /usr/sbin/mysqld (mysqld 8.0.29) starting as process 1
+2023-10-29 11:44:28 2023-10-29T03:44:28.099896Z 1 [System] [MY-013576] [InnoDB] InnoDB initialization has started.
+2023-10-29 11:44:28 2023-10-29T03:44:28.315326Z 1 [System] [MY-013577] [InnoDB] InnoDB initialization has ended.
+2023-10-29 11:44:28 2023-10-29T03:44:28.505805Z 0 [Warning] [MY-010068] [Server] CA certificate ca.pem is self signed.
+2023-10-29 11:44:28 2023-10-29T03:44:28.505855Z 0 [System] [MY-013602] [Server] Channel mysql_main configured to support TLS. Encrypted connections are now supported for this channel.
+2023-10-29 11:44:28 2023-10-29T03:44:28.508208Z 0 [Warning] [MY-011810] [Server] Insecure configuration for --pid-file: Location '/var/run/mysqld' in the path is accessible to all OS users. Consider choosing a different directory.
+2023-10-29 11:44:28 2023-10-29T03:44:28.522160Z 0 [System] [MY-011323] [Server] X Plugin ready for connections. Bind-address: '::' port: 33060, socket: /var/run/mysqld/mysqlx.sock
+2023-10-29 11:44:28 2023-10-29T03:44:28.522233Z 0 [System] [MY-010931] [Server] /usr/sbin/mysqld: ready for connections. Version: '8.0.29'  socket: '/var/run/mysqld/mysqld.sock'  port: 3306  MySQL Community Server - GPL.

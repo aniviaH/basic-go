@@ -8,5 +8,12 @@
       <jdbc-url>jdbc:sqlite:E:\009-go-2\go-dengming\my-workspace\basic-go\03-gorm\test.db</jdbc-url>
       <working-dir>$ProjectFileDir$</working-dir>
     </data-source>
+    <data-source source="LOCAL" name="webook-dev-mysql8" uuid="9e8598af-8a0f-47b1-88a6-fc86b4fa6ad6">
+      <driver-ref>mysql.8</driver-ref>
+      <synchronize>true</synchronize>
+      <jdbc-driver>com.mysql.cj.jdbc.Driver</jdbc-driver>
+      <jdbc-url>jdbc:mysql://localhost:13316/webook</jdbc-url>
+      <working-dir>$ProjectFileDir$</working-dir>
+    </data-source>
   </component>
 </project>

@@ -1,0 +1,258 @@
+{
+  "Id": "81201a9a44b4d5a76e04f3d8b957033d3a4818ebc2f564441c8ded0d1fbd1679",
+  "Created": "2023-10-29T03:42:52.169580182Z",
+  "Path": "docker-entrypoint.sh",
+  "Args": [
+    "--default-authentication-plugin=mysql_native_password"
+  ],
+  "State": {
+    "Status": "running",
+    "Running": true,
+    "Paused": false,
+    "Restarting": false,
+    "OOMKilled": false,
+    "Dead": false,
+    "Pid": 8620,
+    "ExitCode": 0,
+    "Error": "",
+    "StartedAt": "2023-10-29T03:43:33.583630163Z",
+    "FinishedAt": "0001-01-01T00:00:00Z"
+  },
+  "Image": "sha256:33037edcac9b155a185e9555a5da711d754c88cb244e3d13e214db029c3b28ed",
+  "ResolvConfPath": "/var/lib/docker/containers/81201a9a44b4d5a76e04f3d8b957033d3a4818ebc2f564441c8ded0d1fbd1679/resolv.conf",
+  "HostnamePath": "/var/lib/docker/containers/81201a9a44b4d5a76e04f3d8b957033d3a4818ebc2f564441c8ded0d1fbd1679/hostname",
+  "HostsPath": "/var/lib/docker/containers/81201a9a44b4d5a76e04f3d8b957033d3a4818ebc2f564441c8ded0d1fbd1679/hosts",
+  "LogPath": "/var/lib/docker/containers/81201a9a44b4d5a76e04f3d8b957033d3a4818ebc2f564441c8ded0d1fbd1679/81201a9a44b4d5a76e04f3d8b957033d3a4818ebc2f564441c8ded0d1fbd1679-json.log",
+  "Name": "/webook-mysql8-1",
+  "RestartCount": 0,
+  "Driver": "overlay2",
+  "Platform": "linux",
+  "MountLabel": "",
+  "ProcessLabel": "",
+  "AppArmorProfile": "",
+  "ExecIDs": null,
+  "HostConfig": {
+    "Binds": [
+      "G:\\Go\\Go-dengming\\my-workspaces\\basic-go\\webook\\script\\mysql:/docker-entrypoint-initdb.d:rw"
+    ],
+    "ContainerIDFile": "",
+    "LogConfig": {
+      "Type": "json-file",
+      "Config": {}
+    },
+    "NetworkMode": "webook_default",
+    "PortBindings": {
+      "3306/tcp": [
+        {
+          "HostIp": "",
+          "HostPort": "13316"
+        }
+      ]
+    },
+    "RestartPolicy": {
+      "Name": "always",
+      "MaximumRetryCount": 0
+    },
+    "AutoRemove": false,
+    "VolumeDriver": "",
+    "VolumesFrom": null,
+    "ConsoleSize": [
+      0,
+      0
+    ],
+    "CapAdd": null,
+    "CapDrop": null,
+    "CgroupnsMode": "host",
+    "Dns": null,
+    "DnsOptions": null,
+    "DnsSearch": null,
+    "ExtraHosts": [],
+    "GroupAdd": null,
+    "IpcMode": "private",
+    "Cgroup": "",
+    "Links": null,
+    "OomScoreAdj": 0,
+    "PidMode": "",
+    "Privileged": false,
+    "PublishAllPorts": false,
+    "ReadonlyRootfs": false,
+    "SecurityOpt": null,
+    "UTSMode": "",
+    "UsernsMode": "",
+    "ShmSize": 67108864,
+    "Runtime": "runc",
+    "Isolation": "",
+    "CpuShares": 0,
+    "Memory": 0,
+    "NanoCpus": 0,
+    "CgroupParent": "",
+    "BlkioWeight": 0,
+    "BlkioWeightDevice": null,
+    "BlkioDeviceReadBps": null,
+    "BlkioDeviceWriteBps": null,
+    "BlkioDeviceReadIOps": null,
+    "BlkioDeviceWriteIOps": null,
+    "CpuPeriod": 0,
+    "CpuQuota": 0,
+    "CpuRealtimePeriod": 0,
+    "CpuRealtimeRuntime": 0,
+    "CpusetCpus": "",
+    "CpusetMems": "",
+    "Devices": null,
+    "DeviceCgroupRules": null,
+    "DeviceRequests": null,
+    "MemoryReservation": 0,
+    "MemorySwap": 0,
+    "MemorySwappiness": null,
+    "OomKillDisable": false,
+    "PidsLimit": null,
+    "Ulimits": null,
+    "CpuCount": 0,
+    "CpuPercent": 0,
+    "IOMaximumIOps": 0,
+    "IOMaximumBandwidth": 0,
+    "MaskedPaths": [
+      "/proc/asound",
+      "/proc/acpi",
+      "/proc/kcore",
+      "/proc/keys",
+      "/proc/latency_stats",
+      "/proc/timer_list",
+      "/proc/timer_stats",
+      "/proc/sched_debug",
+      "/proc/scsi",
+      "/sys/firmware"
+    ],
+    "ReadonlyPaths": [
+      "/proc/bus",
+      "/proc/fs",
+      "/proc/irq",
+      "/proc/sys",
+      "/proc/sysrq-trigger"
+    ]
+  },
+  "GraphDriver": {
+    "Data": {
+      "LowerDir": "/var/lib/docker/overlay2/51335beba474c58d90ce1300b78450df92a85e6d84bb3d609eef42f637cecf3e-init/diff:/var/lib/docker/overlay2/c256ac738c165ccfda85173601dbfc39612a80e6e77b9c10257590b6b16ac2a8/diff:/var/lib/docker/overlay2/60bce2982197986b9b1f3144443aba5836aaf210fc1eeb9721605848c763dd73/diff:/var/lib/docker/overlay2/f8a5a9fb5e1b735d0ad199918fdda0bdaa3172f9029995bafec35b8d423e6bb7/diff:/var/lib/docker/overlay2/8814731e09f98da6906b4e7baf98ed7cfb2a78deeb4fc9bf89e525bfcf50fd88/diff:/var/lib/docker/overlay2/379d3b0e50cc428ec8125711fc76d09a92960b6367e27c8f1f46ad0983283821/diff:/var/lib/docker/overlay2/36be1e5634ca829b401a87d8bb0f265e60a96129d1094b9ef9b4bf8b754ffcf1/diff:/var/lib/docker/overlay2/f349e83198c7dbc89c6a40ef80b20a0dbcfa81f491c29b8e5b2a69c809a7afec/diff:/var/lib/docker/overlay2/9a63c7a5c5572a2007cf02e6bb1471774371ed81d8301ea0e5f32b51935ffb4d/diff:/var/lib/docker/overlay2/4296ebe34a459dec0762d1922aee2183df19238647102f9914819db28a2c7d7f/diff:/var/lib/docker/overlay2/de59e5f93b90c988264ee9cca5ec8d16437ba3705a9406820618ec1374eaf6f5/diff:/var/lib/docker/overlay2/f81eb082316fc63c8914cfb8023b9362a744887c914d5ca0b09edefd5530ad46/diff",
+      "MergedDir": "/var/lib/docker/overlay2/51335beba474c58d90ce1300b78450df92a85e6d84bb3d609eef42f637cecf3e/merged",
+      "UpperDir": "/var/lib/docker/overlay2/51335beba474c58d90ce1300b78450df92a85e6d84bb3d609eef42f637cecf3e/diff",
+      "WorkDir": "/var/lib/docker/overlay2/51335beba474c58d90ce1300b78450df92a85e6d84bb3d609eef42f637cecf3e/work"
+    },
+    "Name": "overlay2"
+  },
+  "Mounts": [
+    {
+      "Type": "bind",
+      "Source": "G:\\Go\\Go-dengming\\my-workspaces\\basic-go\\webook\\script\\mysql",
+      "Destination": "/docker-entrypoint-initdb.d",
+      "Mode": "rw",
+      "RW": true,
+      "Propagation": "rprivate"
+    },
+    {
+      "Type": "volume",
+      "Name": "637bd2c81a7ec1e26671f9c3c51137d618a773b2b5bdd47ae087d294c970106d",
+      "Source": "/var/lib/docker/volumes/637bd2c81a7ec1e26671f9c3c51137d618a773b2b5bdd47ae087d294c970106d/_data",
+      "Destination": "/var/lib/mysql",
+      "Driver": "local",
+      "Mode": "",
+      "RW": true,
+      "Propagation": ""
+    }
+  ],
+  "Config": {
+    "Hostname": "81201a9a44b4",
+    "Domainname": "",
+    "User": "",
+    "AttachStdin": false,
+    "AttachStdout": true,
+    "AttachStderr": true,
+    "ExposedPorts": {
+      "3306/tcp": {},
+      "33060/tcp": {}
+    },
+    "Tty": false,
+    "OpenStdin": false,
+    "StdinOnce": false,
+    "Env": [
+      "MYSQL_ROOT_PASSWORD=root",
+      "PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin",
+      "GOSU_VERSION=1.14",
+      "MYSQL_MAJOR=8.0",
+      "MYSQL_VERSION=8.0.29-1.el8",
+      "MYSQL_SHELL_VERSION=8.0.29-1.el8"
+    ],
+    "Cmd": [
+      "--default-authentication-plugin=mysql_native_password"
+    ],
+    "Image": "mysql:8.0.29",
+    "Volumes": {
+      "/var/lib/mysql": {}
+    },
+    "WorkingDir": "",
+    "Entrypoint": [
+      "docker-entrypoint.sh"
+    ],
+    "OnBuild": null,
+    "Labels": {
+      "com.docker.compose.config-hash": "40d7ffcb2bec656e188a6de380cd814af8f7c2fba715f3c434ae4da9d74045f1",
+      "com.docker.compose.container-number": "1",
+      "com.docker.compose.depends_on": "",
+      "com.docker.compose.image": "sha256:33037edcac9b155a185e9555a5da711d754c88cb244e3d13e214db029c3b28ed",
+      "com.docker.compose.oneoff": "False",
+      "com.docker.compose.project": "webook",
+      "com.docker.compose.project.config_files": "G:\\Go\\Go-dengming\\my-workspaces\\basic-go\\webook\\docker-compose.yaml",
+      "com.docker.compose.project.working_dir": "G:\\Go\\Go-dengming\\my-workspaces\\basic-go\\webook",
+      "com.docker.compose.service": "mysql8",
+      "com.docker.compose.version": "2.22.0"
+    }
+  },
+  "NetworkSettings": {
+    "Bridge": "",
+    "SandboxID": "e7f97cc66cb07551edfdab578c14d3426e23d41b3792afc1e4a1cd30101dfe15",
+    "HairpinMode": false,
+    "LinkLocalIPv6Address": "",
+    "LinkLocalIPv6PrefixLen": 0,
+    "Ports": {
+      "3306/tcp": [
+        {
+          "HostIp": "0.0.0.0",
+          "HostPort": "13316"
+        }
+      ],
+      "33060/tcp": null
+    },
+    "SandboxKey": "/var/run/docker/netns/e7f97cc66cb0",
+    "SecondaryIPAddresses": null,
+    "SecondaryIPv6Addresses": null,
+    "EndpointID": "",
+    "Gateway": "",
+    "GlobalIPv6Address": "",
+    "GlobalIPv6PrefixLen": 0,
+    "IPAddress": "",
+    "IPPrefixLen": 0,
+    "IPv6Gateway": "",
+    "MacAddress": "",
+    "Networks": {
+      "webook_default": {
+        "IPAMConfig": null,
+        "Links": null,
+        "Aliases": [
+          "webook-mysql8-1",
+          "mysql8",
+          "81201a9a44b4"
+        ],
+        "NetworkID": "d6c915f5cf31ad98a79befedfc06ef3328a3e5dbe03cff84a71d2d0601c9df56",
+        "EndpointID": "517f4930757c7248e8a41a1c55bf5a36c11eb1a254ee5d9e0b1492c03d880e4e",
+        "Gateway": "172.18.0.1",
+        "IPAddress": "172.18.0.2",
+        "IPPrefixLen": 16,
+        "IPv6Gateway": "",
+        "GlobalIPv6Address": "",
+        "GlobalIPv6PrefixLen": 0,
+        "MacAddress": "02:42:ac:12:00:02",
+        "DriverOpts": null
+      }
+    }
+  }
+}
