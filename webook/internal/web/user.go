@@ -2,6 +2,7 @@ package web
 
 import (
 	"fmt"
+	"github.com/aniviaH/basic-go/webook/internal/domain"
 	"github.com/aniviaH/basic-go/webook/internal/service"
 	regexp "github.com/dlclark/regexp2"
 	"github.com/gin-gonic/gin"
@@ -146,7 +147,7 @@ func (u *UserHandler) Signup(ctx *gin.Context) {
 		ctx.String(http.StatusOK, "密码必须大于8位，包含数字、字母、特殊字符")
 		return
 	}
-	ctx.String(http.StatusOK, "注册成功")
+
 	// 这边就是数据库操作
 	//fmt.Println("req:", req)
 
@@ -155,7 +156,18 @@ func (u *UserHandler) Signup(ctx *gin.Context) {
 	//db := gorm.Open()
 
 	// 通过service层信息，调用一下 svc 的方法
-	u.svc.Signup()
+	// 这里的第2个参数，用户，使用 domain.User，代表的是业务意义的User
+	err = u.svc.SignUp(ctx.Request.Context(), domain.User{
+		// 做转化
+		Email:    req.Email,
+		Password: req.Password,
+	})
+	if err != nil {
+		ctx.String(http.StatusOK, "系统异常")
+		return
+	}
+
+	ctx.String(http.StatusOK, "注册成功")
 }
 
 func (u *UserHandler) Signin(ctx *gin.Context) {

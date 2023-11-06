@@ -1,9 +1,14 @@
 package main
 
 import (
+	"github.com/aniviaH/basic-go/webook/internal/repository"
+	"github.com/aniviaH/basic-go/webook/internal/repository/dao"
+	"github.com/aniviaH/basic-go/webook/internal/service"
 	"github.com/aniviaH/basic-go/webook/internal/web"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"gorm.io/driver/mysql"
+	"gorm.io/gorm"
 	"strings"
 	"time"
 )
@@ -52,8 +57,21 @@ func main() {
 		server.Run(":8080")
 	*/
 
-	server := gin.Default()
+	// 初始化db
+	db, err := gorm.Open(mysql.Open("root@root@tcp(localhost:13316)/webook"))
+	if err != nil {
+		// mysql启动异常，直接panic，将当前goroutine直接结束
+		// 只在初始化过程中panic，相当于整个 goroutine 结束
+		// 一旦初始化过程出错，应用就不要启动了
+		panic(err)
+	}
+	userDAO := dao.NewUserDAO(db)
+	userRepo := repository.NewUserRepository(userDAO)
+	userService := service.NewUserService(userRepo)
+	//u := &web.UserHandler{}
+	uh := web.NewUserHanddler(userService)
 
+	server := gin.Default()
 	server.Use(func(context *gin.Context) {
 		println("第一个 middleware")
 	}, func(context *gin.Context) {
@@ -62,7 +80,6 @@ func main() {
 	server.Use(func(context *gin.Context) {
 		println("第三个 middleware")
 	})
-
 	// middleware方案：github.com/gin-gonic/contrib/gin-cors
 	server.Use(cors.New(cors.Config{
 		//出于安全考虑，这里不要用任意*号，公司里的域名个数一般都能容易列出来的。
@@ -86,9 +103,7 @@ func main() {
 		MaxAge: 12 * time.Hour,
 	}))
 
-	//u := &web.UserHandler{}
-	u := web.NewUserHanddler()
-	u.RegisterRoutes(server)
+	uh.RegisterRoutes(server)
 
 	server.Run(":8080")
 }

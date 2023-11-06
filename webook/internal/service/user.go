@@ -3,14 +3,22 @@ package service
 import (
 	"context"
 	"github.com/aniviaH/basic-go/webook/internal/domain"
+	"github.com/aniviaH/basic-go/webook/internal/repository"
 )
 
 type UserService struct {
+	repo repository.UserRepository
 }
 
-// Signup 服务层的注册含义
+func NewUserService(repo repository.UserRepository) *UserService {
+	return &UserService{
+		repo: repo,
+	}
+}
+
+// SignUp 服务层的注册含义
 // service层的命名，一般保持和 Handler 那边的命名对应
-func (svc *UserService) Signup(ctx context.Context, u domain.User) error {
+func (svc *UserService) SignUp(ctx context.Context, u domain.User) error {
 	// 第2个参数 domain.User 的原因：
 	// 分层情况是：
 	// hanlder
@@ -18,5 +26,7 @@ func (svc *UserService) Signup(ctx context.Context, u domain.User) error {
 	// service 在 handler 的下层，保持链路的单一性，service 不应该去访问 handler，handler 可以访问 service
 	// 所以针对用户概念的抽象，再通过在 domain 层做一层定义
 
-	return nil
+	// 你要考虑加密放在哪里的问题了
+	// 然后就是，存起来
+	return svc.repo.Create(ctx, u)
 }
