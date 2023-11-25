@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/aniviaH/basic-go/webook/internal/domain"
 	"github.com/aniviaH/basic-go/webook/internal/repository"
+	"golang.org/x/crypto/bcrypt"
 )
 
 type UserService struct {
@@ -27,6 +28,12 @@ func (svc *UserService) SignUp(ctx context.Context, u domain.User) error {
 	// 所以针对用户概念的抽象，再通过在 domain 层做一层定义
 
 	// 你要考虑加密放在哪里的问题了
+	encrypted, err := bcrypt.GenerateFromPassword([]byte(u.Password), bcrypt.DefaultCost)
+	if err != nil {
+		return err
+	}
+	u.Password = string(encrypted)
+
 	// 然后就是，存起来
 	return svc.repo.Create(ctx, u)
 }
