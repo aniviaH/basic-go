@@ -17,7 +17,7 @@ type UserHandler struct {
 	passwordExp *regexp.Regexp
 }
 
-func NewUserHanddler(svc *service.UserService) *UserHandler {
+func NewUserHandler(svc *service.UserService) *UserHandler {
 	// 预编译正则表达式来提高校验速度。
 	//return &UserHandler{
 	//	emailExp:    regexp.MustCompile(emailRegexPattern, regexp.None),

@@ -14,6 +14,93 @@ import (
 )
 
 func main() {
+	//defaultLogicComment()
+
+	// 初始化db
+	db := initDb()
+
+	// 初始化server
+	server := initWebServer()
+
+	// 初始化user的handler
+	uh := initUser(db)
+
+	// 注册user的路由
+	uh.RegisterRoutes(server)
+
+	// 启动服务
+	server.Run(":8080")
+}
+
+func initWebServer() *gin.Engine {
+	server := gin.Default()
+
+	server.Use(func(context *gin.Context) {
+		println("第一个 middleware")
+	}, func(context *gin.Context) {
+		println("第二个 middleware")
+	})
+
+	server.Use(func(context *gin.Context) {
+		println("第三个 middleware")
+	})
+
+	// middleware方案：github.com/gin-gonic/contrib/gin-cors
+	server.Use(cors.New(cors.Config{
+		//出于安全考虑，这里不要用任意*号，公司里的域名个数一般都能容易列出来的。
+		//另外前端xhr请求带了 withCredentials 属性时，也不能写*，否则会被浏览器认为跨域不通过而拦截
+		//所以不要用*
+		AllowOrigins:  []string{"http://localhost:3000"},
+		AllowMethods:  []string{"POST", "GET", "OPTIONS"},        // 对应请求投头中的 Accecss-Control-Request-Method, 默认值是全部的simple methods
+		AllowHeaders:  []string{"Content-Type", "authorization"}, // 对应请求投头中的 Accecss-Control-Request-Headers
+		ExposeHeaders: []string{"Content-Length"},
+		// 是否允许带 cookie 之类的东西
+		AllowCredentials: true,
+		// 如果 origin 判断逻辑复杂，可以用这个代替 AllowOrigins
+		AllowOriginFunc: func(origin string) bool {
+			//return origin == "https://github.com"
+			if strings.HasPrefix(origin, "http://localhost") {
+				// 开发环境
+				return true
+			}
+			return true
+		},
+		MaxAge: 12 * time.Hour,
+	}))
+
+	return server
+}
+
+func initUser(db *gorm.DB) *web.UserHandler {
+	userDAO := dao.NewUserDAO(db)
+	userRepo := repository.NewUserRepository(userDAO)
+	userService := service.NewUserService(userRepo)
+	//u := &web.UserHandler{}
+	uh := web.NewUserHandler(userService)
+
+	return uh
+}
+
+func initDb() *gorm.DB {
+	// 初始化db
+	db, err := gorm.Open(mysql.Open("root:root@tcp(localhost:13316)/webook"))
+	if err != nil {
+		// mysql启动异常，直接panic，将当前goroutine直接结束
+		// 只在初始化过程中panic，相当于整个 goroutine 结束
+		// 一旦初始化过程出错，应用就不要启动了
+		panic(err)
+	}
+
+	// 初始化table
+	err = dao.InitTable(db)
+	if err != nil {
+		panic(err)
+	}
+
+	return db
+}
+
+func defaultLogicComment() {
 	/*
 		server := gin.Default()
 		u := &web.UserHandler{}
@@ -56,54 +143,4 @@ func main() {
 
 		server.Run(":8080")
 	*/
-
-	// 初始化db
-	db, err := gorm.Open(mysql.Open("root@root@tcp(localhost:13316)/webook"))
-	if err != nil {
-		// mysql启动异常，直接panic，将当前goroutine直接结束
-		// 只在初始化过程中panic，相当于整个 goroutine 结束
-		// 一旦初始化过程出错，应用就不要启动了
-		panic(err)
-	}
-	userDAO := dao.NewUserDAO(db)
-	userRepo := repository.NewUserRepository(userDAO)
-	userService := service.NewUserService(userRepo)
-	//u := &web.UserHandler{}
-	uh := web.NewUserHanddler(userService)
-
-	server := gin.Default()
-	server.Use(func(context *gin.Context) {
-		println("第一个 middleware")
-	}, func(context *gin.Context) {
-		println("第二个 middleware")
-	})
-	server.Use(func(context *gin.Context) {
-		println("第三个 middleware")
-	})
-	// middleware方案：github.com/gin-gonic/contrib/gin-cors
-	server.Use(cors.New(cors.Config{
-		//出于安全考虑，这里不要用任意*号，公司里的域名个数一般都能容易列出来的。
-		//另外前端xhr请求带了 withCredentials 属性时，也不能写*，否则会被浏览器认为跨域不通过而拦截
-		//所以不要用*
-		AllowOrigins:  []string{"http://localhost:3000"},
-		AllowMethods:  []string{"POST", "GET", "OPTIONS"},        // 对应请求投头中的 Accecss-Control-Request-Method, 默认值是全部的simple methods
-		AllowHeaders:  []string{"Content-Type", "authorization"}, // 对应请求投头中的 Accecss-Control-Request-Headers
-		ExposeHeaders: []string{"Content-Length"},
-		// 是否允许带 cookie 之类的东西
-		AllowCredentials: true,
-		// 如果 origin 判断逻辑复杂，可以用这个代替 AllowOrigins
-		AllowOriginFunc: func(origin string) bool {
-			//return origin == "https://github.com"
-			if strings.HasPrefix(origin, "http://localhost") {
-				// 开发环境
-				return true
-			}
-			return true
-		},
-		MaxAge: 12 * time.Hour,
-	}))
-
-	uh.RegisterRoutes(server)
-
-	server.Run(":8080")
 }

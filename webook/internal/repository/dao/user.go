@@ -33,7 +33,7 @@ type User struct {
 	Email    string `gorm:"unique"`
 	Password string
 
-	// 往这里面加
+	// 往这里面加其它的字段
 
 	// 创建时间，毫秒数
 	Ctime int64
@@ -41,7 +41,7 @@ type User struct {
 	Utime int64
 }
 
-// UserDetail 用户详情表
+// UserDetail 用户详情表 - 可以用来放其它次要信息
 type UserDetail struct {
 }
 
