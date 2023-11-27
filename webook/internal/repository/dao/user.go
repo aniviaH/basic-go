@@ -31,6 +31,7 @@ func (ud *UserDAO) Insert(ctx context.Context, u User) error {
 	u.Utime = now
 	err := ud.db.WithContext(ctx).Create(&u).Error // 注意，这里需要取u的地址
 	// 下面这段代码与底层强耦合，就是针对底层使用的MYSQL数据库。如果不是，则也永远不会进入
+	//if mysqlErr, ok := err.(*mysql.MySQLError); ok {
 	var mysqlErr *mysql.MySQLError
 	if errors.As(err, &mysqlErr) {
 		const uniqueConflictsErrNo uint16 = 1062
