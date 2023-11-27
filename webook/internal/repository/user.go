@@ -2,9 +2,13 @@ package repository
 
 import (
 	"context"
+	"fmt"
 	"github.com/aniviaH/basic-go/webook/internal/domain"
 	"github.com/aniviaH/basic-go/webook/internal/repository/dao"
 )
+
+var ErrUserDuplicateEmail = dao.ErrUserDuplicateEmail
+var ErrUserDuplicateEmailV1 = fmt.Errorf("%w 邮箱冲突", dao.ErrUserDuplicateEmail)
 
 type UserRepository struct {
 	dao *dao.UserDAO
