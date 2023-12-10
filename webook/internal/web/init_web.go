@@ -29,7 +29,7 @@ func registerUserRoutes(server *gin.Engine) {
 	//server.POST("/users/signin", func(context *gin.Context) {
 	//
 	//})
-	server.POST("/users/signin", u.Signin)
+	server.POST("/users/signin", u.Login)
 
 	// 编辑用户
 	//server.POST("/users/edit", func(context *gin.Context) {

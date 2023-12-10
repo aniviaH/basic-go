@@ -87,7 +87,7 @@ func initDb() *gorm.DB {
 	if err != nil {
 		// mysql启动异常，直接panic，将当前goroutine直接结束
 		// 只在初始化过程中panic，相当于整个 goroutine 结束
-		// 一旦初始化过程出错，应用就不要启动了
+		// 一旦数据库连接初始化过程出错，应用就不要启动了
 		panic(err)
 	}
 

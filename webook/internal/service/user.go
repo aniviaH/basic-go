@@ -2,12 +2,16 @@ package service
 
 import (
 	"context"
+	"errors"
 	"github.com/aniviaH/basic-go/webook/internal/domain"
 	"github.com/aniviaH/basic-go/webook/internal/repository"
 	"golang.org/x/crypto/bcrypt"
 )
 
-var ErrUserDuplicateEmail = repository.ErrUserDuplicateEmail
+var (
+	ErrUserDuplicateEmail    = repository.ErrUserDuplicateEmail
+	ErrInvalidUserOrPassword = errors.New("账号/邮箱或密码不对")
+)
 
 type UserService struct {
 	repo repository.UserRepository
@@ -38,4 +42,28 @@ func (svc *UserService) SignUp(ctx context.Context, u domain.User) error {
 
 	// 然后就是，存起来
 	return svc.repo.Create(ctx, u)
+}
+
+func (svc *UserService) Login(ctx context.Context, email string, password string) error {
+	// 先找用户
+	u, err := svc.repo.FindByEmail(ctx, email)
+	//if err == repository.ErrUserNotFound {
+	//	return ErrInvalidUserOrPassword
+	//}
+	if errors.Is(err, repository.ErrUserNotFound) {
+		// 账号或密码不存在
+		return ErrInvalidUserOrPassword
+	}
+	if err != nil {
+		// 其它错误
+		return err
+	}
+
+	// 比较密码
+	err = bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(password))
+	if err != nil {
+		// 可以在这里打个日志，比如DEBUG日志
+		return ErrInvalidUserOrPassword
+	}
+	return err
 }

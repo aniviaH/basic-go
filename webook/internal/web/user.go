@@ -60,7 +60,7 @@ func (u *UserHandler) RegisterRoutes(server *gin.Engine) {
 	//server.POST("/users/signin", func(context *gin.Context) {
 	//
 	//})
-	server.POST("/users/signin", u.Signin)
+	server.POST("/users/login", u.Login)
 
 	// 编辑用户
 	//server.POST("/users/edit", func(context *gin.Context) {
@@ -176,7 +176,30 @@ func (u *UserHandler) Signup(ctx *gin.Context) {
 	ctx.String(http.StatusOK, "注册成功")
 }
 
-func (u *UserHandler) Signin(ctx *gin.Context) {
+func (u *UserHandler) Login(ctx *gin.Context) {
+	type LoginReq struct {
+		Email    string `json:"email"`
+		Password string `json:"password"`
+	}
+
+	var req LoginReq
+	if err := ctx.Bind(&req); err != nil {
+		return
+	}
+	// 拿到数据
+	fmt.Printf("req: %v", req)
+	err := u.svc.Login(ctx.Request.Context(), req.Email, req.Password)
+	if errors.Is(err, service.ErrInvalidUserOrPassword) {
+		ctx.String(http.StatusOK, "用户名或密码不对")
+		return
+	}
+	if err != nil {
+		ctx.String(http.StatusOK, "系统错误")
+		return
+	}
+
+	ctx.String(http.StatusOK, "登录成功")
+	return
 }
 
 func (u *UserHandler) Edit(ctx *gin.Context) {

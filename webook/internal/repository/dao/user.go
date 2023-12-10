@@ -10,6 +10,7 @@ import (
 
 var (
 	ErrUserDuplicateEmail = errors.New("邮箱冲突")
+	ErrUserNotFound       = gorm.ErrRecordNotFound
 )
 
 type UserDAO struct {
@@ -41,6 +42,13 @@ func (ud *UserDAO) Insert(ctx context.Context, u User) error {
 		}
 	}
 	return nil
+}
+
+func (ud *UserDAO) FindByEmail(ctx context.Context, email string) (User, error) {
+	var u User
+	//err := ud.db.WithContext(ctx).Where("email = ?", email).First(&u).Error
+	err := ud.db.WithContext(ctx).First(&u, "email = ?", email).Error
+	return u, err
 }
 
 // User 在DAO里面，直接对应数据库表结构(一一对应)
