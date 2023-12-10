@@ -1,11 +1,15 @@
 package main
 
 import (
+	"fmt"
 	"github.com/aniviaH/basic-go/webook/internal/repository"
 	"github.com/aniviaH/basic-go/webook/internal/repository/dao"
 	"github.com/aniviaH/basic-go/webook/internal/service"
 	"github.com/aniviaH/basic-go/webook/internal/web"
+	"github.com/aniviaH/basic-go/webook/internal/web/middleware"
 	"github.com/gin-contrib/cors"
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/cookie"
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -13,7 +17,22 @@ import (
 	"time"
 )
 
+func RangeKeyPairs(keyPairs ...[]byte) int {
+	for k, v := range keyPairs {
+		fmt.Println(k, v)
+	}
+	//for i := 0; i < len(keyPairs); i++ {
+	//	fmt.Println(keyPairs[i])
+	//}
+	return 999
+}
+func Test(keyPairs ...[]byte) int {
+	return RangeKeyPairs(keyPairs...)
+}
+
 func main() {
+	Test([]byte("abcde"), []byte("hjk"))
+
 	//defaultLogicComment()
 
 	// 初始化db
@@ -67,6 +86,48 @@ func initWebServer() *gin.Engine {
 		},
 		MaxAge: 12 * time.Hour,
 	}))
+
+	// session配置步骤1：初始化gin sessions的配置
+	store := cookie.NewStore([]byte("secret"))
+	// cookie的名字叫mysession
+	server.Use(sessions.Sessions("mysession", store))
+
+	// session配置步骤3: 对路由访问进行登session的校验和拦截（封装出去作为一个中间件函数）
+	// v1
+	//middleware.IgnorePaths = []string{"users/login", "users/signup"}
+	//middleware.IgnorePaths = []string{"sss"}
+	//server.Use(middleware.CheckLogin())
+	// 问题点是，如果我有两个server，这个服务不能忽略sss这条路径。这个时候v1就做不到，因为内部是包变量，其只能有一个
+	// 虽然说，登录的场景不会有两个server这种场景。但开发很多其它middlerware时是可能遇到这种场景的。
+	//server1 := gin.Default()
+	//server1.Use(middleware.CheckLogin())
+	// v2
+	//server.Use(middleware.CheckLoginV2([]string{"sss"}, "abc", "def"))
+	//server1 := gin.Default()
+	//server1.Use(middleware.CheckLoginV2([]string{}, "abc", "def"))
+	// v3: 推荐写法
+	// 作为中间件的提供者，如果你的设计有问题需要修改，那么使用你的中间件用户都得进行更新，这会是影响很大。所以中间件设计之初应该考虑好兼容性和扩展性
+	// 如下的写法，它可以做到比较好的兼容性和扩展性
+	server.Use(
+		middleware.NewLoginMiddlewareBuilder().
+			IgnorePaths("/users/login").
+			IgnorePaths("/users/signup").
+			Build())
+	// 校验登录态 - 可以封装一下
+	//server.Use(func(ctx *gin.Context) {
+	//	// 不需要登录校验的路由
+	//	if ctx.Request.URL.Path == "/users/login" || ctx.Request.URL.Path == "/users/signup" {
+	//		return
+	//	}
+	//
+	//	sess := sessions.Default(ctx)
+	//	id := sess.Get("userId")
+	//	if id == nil {
+	//		// 没有登录
+	//		ctx.AbortWithStatus(http.StatusUnauthorized)
+	//		return
+	//	}
+	//})
 
 	return server
 }

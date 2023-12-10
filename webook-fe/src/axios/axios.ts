@@ -10,16 +10,19 @@ instance.interceptors.response.use(function (resp) {
     const newToken = resp.headers["x-jwt-token"]
     console.log("resp headers", resp.headers)
     console.log("token" + newToken)
+    console.log("resp", resp)
     if (newToken) {
         localStorage.setItem("token", newToken)
     }
-    if (resp.status == 401) {
+    if (resp.status == 401) { 
+        alert("请登录")
         window.location.href="/users/login"
     }
     return resp
 }, (err) => {
-    console.log(err)
+    console.log('http error:', err)
     if (err.response && err.response.status == 401) {
+        alert("请登录")
         window.location.href="/users/login"
     }
     return err

@@ -44,7 +44,7 @@ func (svc *UserService) SignUp(ctx context.Context, u domain.User) error {
 	return svc.repo.Create(ctx, u)
 }
 
-func (svc *UserService) Login(ctx context.Context, email string, password string) error {
+func (svc *UserService) Login(ctx context.Context, email string, password string) (domain.User, error) {
 	// 先找用户
 	u, err := svc.repo.FindByEmail(ctx, email)
 	//if err == repository.ErrUserNotFound {
@@ -52,18 +52,18 @@ func (svc *UserService) Login(ctx context.Context, email string, password string
 	//}
 	if errors.Is(err, repository.ErrUserNotFound) {
 		// 账号或密码不存在
-		return ErrInvalidUserOrPassword
+		return domain.User{}, ErrInvalidUserOrPassword
 	}
 	if err != nil {
 		// 其它错误
-		return err
+		return domain.User{}, err
 	}
 
 	// 比较密码
 	err = bcrypt.CompareHashAndPassword([]byte(u.Password), []byte(password))
 	if err != nil {
 		// 可以在这里打个日志，比如DEBUG日志
-		return ErrInvalidUserOrPassword
+		return domain.User{}, ErrInvalidUserOrPassword
 	}
-	return err
+	return u, err
 }

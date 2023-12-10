@@ -3,6 +3,7 @@ package domain
 // User 领域对象，对应的是 DDD 中的聚合根，或者叫entity
 // BO(Business Object)
 type User struct {
+	Id int64
 	//Addr Address
 	Email    string
 	Password string

@@ -6,6 +6,7 @@ import (
 	"github.com/aniviaH/basic-go/webook/internal/domain"
 	"github.com/aniviaH/basic-go/webook/internal/service"
 	regexp "github.com/dlclark/regexp2"
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"net/http"
 )
@@ -188,15 +189,39 @@ func (u *UserHandler) Login(ctx *gin.Context) {
 	}
 	// 拿到数据
 	fmt.Printf("req: %v", req)
-	err := u.svc.Login(ctx.Request.Context(), req.Email, req.Password)
+	user, err := u.svc.Login(ctx.Request.Context(), req.Email, req.Password)
 	if errors.Is(err, service.ErrInvalidUserOrPassword) {
 		ctx.String(http.StatusOK, "用户名或密码不对")
 		return
 	}
+
 	if err != nil {
 		ctx.String(http.StatusOK, "系统错误")
 		return
 	}
+
+	//http.Cookie{
+	//	Name:       "",
+	//	Value:      "",
+	//	Path:       "",
+	//	Domain:     "",
+	//	Expires:    time.Time{},
+	//	RawExpires: "",
+	//	MaxAge:     0,
+	//	Secure:     false,
+	//	HttpOnly:   false,
+	//	SameSite:   0,
+	//	Raw:        "",
+	//	Unparsed:   nil,
+	//}
+
+	// 在这里登录成功了
+	// session配置步骤2: 进行设置当前的session（通过http响应头部Set-Cookie将cookie告知客户端进行存储）
+	sess := sessions.Default(ctx)
+	// 设置放在 session 里面的值
+	sess.Set("userId", user.Id)
+	// 需要调一下Save方法
+	sess.Save()
 
 	ctx.String(http.StatusOK, "登录成功")
 	return
@@ -207,5 +232,6 @@ func (u *UserHandler) Edit(ctx *gin.Context) {
 }
 
 func (u *UserHandler) Profile(ctx *gin.Context) {
-
+	ctx.String(http.StatusOK, "这是你的profile")
+	return
 }
