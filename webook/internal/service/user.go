@@ -67,3 +67,11 @@ func (svc *UserService) Login(ctx context.Context, email string, password string
 	}
 	return u, err
 }
+
+func (svc *UserService) Profile(ctx context.Context, session int64) (domain.User, error) {
+	u, err := svc.repo.FindBySession(ctx, session)
+	if err != nil {
+		return domain.User{}, err
+	}
+	return u, err
+}

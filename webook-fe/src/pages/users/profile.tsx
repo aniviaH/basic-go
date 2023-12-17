@@ -1,12 +1,16 @@
 import { useState, useEffect } from 'react'
 import axios from "@/axios/axios";
 
+type Profile = {
+    Email: string,
+    Id: string,
+}
+
+const defaultProfile: Profile = {Email: "", Id: ""}
+
+
 function Page() {
-    type Profile = {
-        Email: string
-    }
-    let p: Profile = {Email: ""}
-    const [data, setData] = useState<Profile>(p)
+    const [data, setData] = useState<Profile>(() => defaultProfile)
     const [isLoading, setLoading] = useState(false)
 
     useEffect(() => {
@@ -24,7 +28,10 @@ function Page() {
 
     return (
         <div>
-            <h1>{data.Email}</h1>
+            <p>用户信息：{JSON.stringify(data)}</p>
+            <br></br>
+            <p>邮箱: {data.Email}</p>
+            <p>用户id: {data.Id}</p>
             {/*<p>{data.bio}</p>*/}
         </div>
     )

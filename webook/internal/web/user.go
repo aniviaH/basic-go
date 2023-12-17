@@ -217,11 +217,11 @@ func (u *UserHandler) Login(ctx *gin.Context) {
 
 	// 在这里登录成功了
 	// session配置步骤2: 进行设置当前的session（通过http响应头部Set-Cookie将cookie告知客户端进行存储）
-	sess := sessions.Default(ctx)
+	session := sessions.Default(ctx)
 	// 设置放在 session 里面的值
-	sess.Set("userId", user.Id)
+	session.Set("userId", user.Id)
 	// 需要调一下Save方法
-	sess.Save()
+	session.Save()
 
 	ctx.String(http.StatusOK, "登录成功")
 	return
@@ -232,6 +232,33 @@ func (u *UserHandler) Edit(ctx *gin.Context) {
 }
 
 func (u *UserHandler) Profile(ctx *gin.Context) {
-	ctx.String(http.StatusOK, "这是你的profile")
+	//user, err := u.svc.Profile(ctx.Request.Context())
+	//if err != nil {
+	//	ctx.String(http.StatusOK, "获取用户信息失败")
+	//}
+	//
+	//ctx.String(http.StatusOK, user.Password)
+
+	session := sessions.Default(ctx)
+	sessionValue := session.Get("userId")
+	if sessionValue == nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "未登录"})
+		return
+	}
+
+	// 将session值转换为字符串 - 此处是类型断言，断言取出的sessionValue是int64，因为set是使用的就是int64类型(用户id)
+	sessionStr, ok := sessionValue.(int64)
+	if !ok {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "无效的session"})
+		return
+	}
+
+	// 根据session值（由session解出来的userId）查询用户信息
+	user, err := u.svc.Profile(ctx, sessionStr)
+	if err != nil {
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "查询用户信息失败"})
+		return
+	}
+	ctx.JSON(http.StatusOK, user)
 	return
 }

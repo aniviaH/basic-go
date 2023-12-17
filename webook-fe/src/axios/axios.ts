@@ -16,14 +16,14 @@ instance.interceptors.response.use(function (resp) {
     }
     if (resp.status == 401) { 
         alert("请登录")
-        window.location.href="/users/login"
+        // window.location.href="/users/login"
     }
     return resp
 }, (err) => {
     console.log('http error:', err)
     if (err.response && err.response.status == 401) {
         alert("请登录")
-        window.location.href="/users/login"
+        // window.location.href="/users/login"
     }
     return err
 })

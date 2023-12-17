@@ -51,6 +51,12 @@ func (ud *UserDAO) FindByEmail(ctx context.Context, email string) (User, error) 
 	return u, err
 }
 
+func (ud *UserDAO) FindBySession(ctx context.Context, session int64) (User, error) {
+	var u User
+	err := ud.db.WithContext(ctx).First(&u, "id = ?", session).Error
+	return u, err
+}
+
 // User 在DAO里面，直接对应数据库表结构(一一对应)
 // 有些人叫做 entity，有些人叫做 model，有些人叫做 PO(Persistent Object)，都是关于与数据库关联映射的概念
 type User struct {
