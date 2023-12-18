@@ -20,6 +20,14 @@ PS：暂时不要求上传头像，后面我们讲到 OSS 之后直接用 OSS。
 
 
 
+# 作业提交commit
+
+edit接口：https://github.com/aniviaH/basic-go/commit/0a4f1412e0b12f32b1b4813060b22e1186698735
+
+profile接口：https://github.com/aniviaH/basic-go/commit/2447127050f1cc4eb0d7d502ce03b04dd6828224
+
+
+
 # postman截图
 
 ## 昵称/个人简介长度校验
