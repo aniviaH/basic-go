@@ -9,6 +9,8 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"net/http"
+	"time"
+	"unicode/utf8"
 )
 
 // UserHandler 我准备在它上面定义跟用户有关的路由
@@ -228,17 +230,69 @@ func (u *UserHandler) Login(ctx *gin.Context) {
 }
 
 func (u *UserHandler) Edit(ctx *gin.Context) {
+	type EditReq struct {
+		NickName     string `json:"nickName"`
+		BirthDay     string `json:"birthDay"`
+		PersonalDesc string `json:"personalDesc"`
+	}
+
+	var req EditReq
+	if err := ctx.Bind(&req); err != nil {
+		return
+	}
+	// 拿到数据
+	fmt.Printf("req: %v", req)
+
+	// 判断参数格式-NickName
+	//if len(req.NickName) > 255 { // 判断的是字节数，判断字符数用utf8.RuneCountInString
+	if utf8.RuneCountInString(req.NickName) > 255 {
+
+		//ctx.JSON(http.StatusBadRequest, gin.H{"error": "Invalid string length for nickName"})
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "昵称长度不能超过255为"})
+		return
+	}
+
+	// 判断参数格式-PersonalDesc
+	if utf8.RuneCountInString(req.PersonalDesc) > 255 {
+		//ctx.JSON(400, gin.H{"error": "Invalid string length for personalDesc"})
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "个人简介长度不能超过255位"})
+		return
+	}
+
+	// 判断参数格式-BirthDay
+	var layout = "2006-01-02"
+	birthDay, err := time.Parse(layout, req.BirthDay)
+	if err != nil {
+		ctx.JSON(400, gin.H{"error": "Invalid date format for birthDay"})
+		return
+	}
+
+	session := sessions.Default(ctx)
+	userId := session.Get("userId")
+	if userId == nil {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "未登录"})
+		return
+	}
+
+	// 将session值转换为字符串 - 此处是类型断言，断言取出的sessionValue是int64，因为set是使用的就是int64类型(用户id)
+	userIdInt, ok := userId.(int64)
+	if !ok {
+		ctx.JSON(http.StatusBadRequest, gin.H{"error": "无效的session"})
+		return
+	}
+
+	// 根据session值（由session解出来的userId）修改用户信息-昵称、生日、个人简介
+	user, err := u.svc.Edit(ctx.Request.Context(), userIdInt, req.NickName, birthDay, req.PersonalDesc)
+	if err != nil {
+		ctx.String(http.StatusOK, "系统错误")
+		return
+	}
+	ctx.JSON(http.StatusOK, user)
+	return
 
 }
 
 func (u *UserHandler) Profile(ctx *gin.Context) {
-	//user, err := u.svc.Profile(ctx.Request.Context())
-	//if err != nil {
-	//	ctx.String(http.StatusOK, "获取用户信息失败")
-	//}
-	//
-	//ctx.String(http.StatusOK, user.Password)
-
 	session := sessions.Default(ctx)
 	sessionValue := session.Get("userId")
 	if sessionValue == nil {
@@ -256,7 +310,7 @@ func (u *UserHandler) Profile(ctx *gin.Context) {
 	// 根据session值（由session解出来的userId）查询用户信息
 	user, err := u.svc.Profile(ctx, sessionStr)
 	if err != nil {
-		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "查询用户信息失败"})
+		ctx.JSON(http.StatusInternalServerError, gin.H{"error": "更新用户信息失败"})
 		return
 	}
 	ctx.JSON(http.StatusOK, user)

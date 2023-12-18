@@ -51,6 +51,27 @@ func (ud *UserDAO) FindByEmail(ctx context.Context, email string) (User, error) 
 	return u, err
 }
 
+func (ud *UserDAO) EditBySession(ctx context.Context, userId int64, nickName string, birthDay time.Time, personalDesc string) (User, error) {
+	var u User
+	err := ud.db.WithContext(ctx).First(&u, "id = ?", userId).Error
+	if err != nil {
+		return User{}, err
+	}
+	// Update the user's information
+	u.NickName = nickName
+	u.BirthDay = birthDay
+	u.PersonalDesc = personalDesc
+
+	// Save the changes back to the database
+	err = ud.db.WithContext(ctx).Save(&u).Error
+	if err != nil {
+		//panic("Failed to update user information")
+		return User{}, err
+	}
+
+	return u, err
+}
+
 func (ud *UserDAO) FindBySession(ctx context.Context, session int64) (User, error) {
 	var u User
 	err := ud.db.WithContext(ctx).First(&u, "id = ?", session).Error
@@ -66,6 +87,12 @@ type User struct {
 	Password string
 
 	// 往这里面加其它的字段
+	// 昵称
+	NickName string `gorm:"size:255"`
+	// 生日
+	BirthDay time.Time
+	// 个人简介
+	PersonalDesc string `gorm:"size:255"`
 
 	// 创建时间，毫秒数
 	Ctime int64

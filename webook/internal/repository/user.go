@@ -4,6 +4,7 @@ import (
 	"context"
 	"github.com/aniviaH/basic-go/webook/internal/domain"
 	"github.com/aniviaH/basic-go/webook/internal/repository/dao"
+	"time"
 )
 
 var (
@@ -44,6 +45,21 @@ func (ur *UserRepository) FindByEmail(ctx context.Context, email string) (domain
 		Id:       u.Id,
 		Email:    u.Email,
 		Password: u.Password,
+	}, nil
+}
+
+func (ur *UserRepository) EditBySession(ctx context.Context, userId int64, nickName string, birthDay time.Time, personalDesc string) (domain.User, error) {
+	u, err := ur.dao.EditBySession(ctx, userId, nickName, birthDay, personalDesc)
+	if err != nil {
+		return domain.User{}, err
+	}
+	return domain.User{
+		Id:    u.Id,
+		Email: u.Email,
+		//Password: u.Password,
+		NickName:     u.NickName,
+		BirthDay:     u.BirthDay,
+		PersonalDesc: u.PersonalDesc,
 	}, nil
 }
 

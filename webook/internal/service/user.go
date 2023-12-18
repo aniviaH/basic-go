@@ -6,6 +6,7 @@ import (
 	"github.com/aniviaH/basic-go/webook/internal/domain"
 	"github.com/aniviaH/basic-go/webook/internal/repository"
 	"golang.org/x/crypto/bcrypt"
+	"time"
 )
 
 var (
@@ -64,6 +65,14 @@ func (svc *UserService) Login(ctx context.Context, email string, password string
 	if err != nil {
 		// 可以在这里打个日志，比如DEBUG日志
 		return domain.User{}, ErrInvalidUserOrPassword
+	}
+	return u, err
+}
+
+func (svc *UserService) Edit(ctx context.Context, userId int64, nickName string, birthDay time.Time, personalDesc string) (domain.User, error) {
+	u, err := svc.repo.EditBySession(ctx, userId, nickName, birthDay, personalDesc)
+	if err != nil {
+		return domain.User{}, err
 	}
 	return u, err
 }
