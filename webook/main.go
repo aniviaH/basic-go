@@ -9,7 +9,7 @@ import (
 	"github.com/aniviaH/basic-go/webook/internal/web/middleware"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/sessions"
-	"github.com/gin-contrib/sessions/cookie"
+	"github.com/gin-contrib/sessions/memstore"
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -88,7 +88,11 @@ func initWebServer() *gin.Engine {
 	}))
 
 	// session配置步骤1：初始化gin sessions的配置
-	store := cookie.NewStore([]byte("secret"))
+	//store := cookie.NewStore([]byte("secret"))
+	// 基于内存的实现，第一个参数是 authentication key，最好是 32 或者 64 位
+	// 第二个参数是 encryption key
+	//store := memstore.NewStore([]byte("authentication-key-123456"), []byte("encryption-key-123456"))
+	store := memstore.NewStore([]byte("cBjJFkt0Kgs6CKD4cr6QYYd8qIaQi8pds7Py3kYEkibIzjf1hRFe3EnLoCfhk2BI"), []byte("yICPpbp2QnPmCfHGEryXLXFtkCyEsela"))
 	// cookie的名字叫mysession
 	server.Use(sessions.Sessions("mysession", store))
 

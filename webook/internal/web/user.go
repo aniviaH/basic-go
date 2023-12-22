@@ -221,7 +221,11 @@ func (u *UserHandler) Login(ctx *gin.Context) {
 	// 设置放在 session 里面的值
 	sess.Set("userId", user.Id)
 	// 需要调一下Save方法
-	sess.Save()
+	sessionSaveErr := sess.Save()
+	if sessionSaveErr != nil {
+		ctx.String(http.StatusInternalServerError, "登录失败")
+		return
+	}
 
 	ctx.String(http.StatusOK, "登录成功")
 	return
