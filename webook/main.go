@@ -9,7 +9,7 @@ import (
 	"github.com/aniviaH/basic-go/webook/internal/web/middleware"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/sessions"
-	"github.com/gin-contrib/sessions/memstore"
+	"github.com/gin-contrib/sessions/redis"
 	"github.com/gin-gonic/gin"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
@@ -89,12 +89,29 @@ func initWebServer() *gin.Engine {
 
 	// session配置步骤1：初始化gin sessions的配置
 	//store := cookie.NewStore([]byte("secret"))
+
 	// 基于内存的实现，第一个参数是 authentication key，最好是 32 或者 64 位
 	// 第二个参数是 encryption key
 	//store := memstore.NewStore([]byte("authentication-key-123456"), []byte("encryption-key-123456"))
-	store := memstore.NewStore([]byte("cBjJFkt0Kgs6CKD4cr6QYYd8qIaQi8pds7Py3kYEkibIzjf1hRFe3EnLoCfhk2BI"), []byte("yICPpbp2QnPmCfHGEryXLXFtkCyEsela"))
+	//store := memstore.NewStore([]byte("cBjJFkt0Kgs6CKD4cr6QYYd8qIaQi8pds7Py3kYEkibIzjf1hRFe3EnLoCfhk2BI"), []byte("yICPpbp2QnPmCfHGEryXLXFtkCyEsela"))
+
+	// 基于redis的实现
+	// 第一个参数是最大空闲连接数量
+	// 第二个参数是网络类型：tcp 或 udp，你不太可能用udp
+	// 第三个参数是host:端口
+	// 第四哥参数是密码
+	// 最后两个就是两个key
+	store, err := redis.NewStore(16, "tcp", "localhost:6379", "", []byte("cBjJFkt0Kgs6CKD4cr6QYYd8qIaQi8pds7Py3kYEkibIzjf1hRFe3EnLoCfhk2BI"), []byte("yICPpbp2QnPmCfHGEryXLXFtkCyEsela"))
+	if err != nil {
+		panic(err)
+	}
+
 	// cookie的名字叫mysession
 	server.Use(sessions.Sessions("mysession", store))
+
+	// 面向接口编程，可以自己提供一个sqlx版本的sessions实现
+	//mystore := &sqlx_store.Store{}
+	//server.Use(sessions.Sessions("mysession", mystore))
 
 	// session配置步骤3: 对路由访问进行登session的校验和拦截（封装出去作为一个中间件函数）
 	// v1

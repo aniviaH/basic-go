@@ -12,14 +12,18 @@ services:
     ports:
       # 注意这里我映射了 13316 端口
       - "13316:3306"
-#  redis:
-#    image: 'bitnami/redis:latest'
-#    environment:
-#      - ALLOW_EMPTY_PASSWORD=yes
-#    ports:
-#      - "6379:6379"
+  redis:
+    image: 'bitnami/redis:latest'
+    environment:
+      - ALLOW_EMPTY_PASSWORD=yes # 不用密码
+    ports:
+      - "6379:6379"
 
-# 在当前yaml文件所在目录运行 docker-compose，就会运行docker,docker就会根据这个文件进行运行配置的镜像，
+# 在当前yaml文件所在目录运行 docker-compose（命令：docker compose up），就会运行docker，docker就会根据这个文件进行运行配置的镜像，
+
 # 这里的信息有:
+
 # 服务名称: mysql8（使用镜像：mysql:8.0.29）
 # 初始化脚本：./script/mysql/文件夹下的脚本
+
+# 服务名称：redis（使用镜像：bitnami/redis:latest）

@@ -1,0 +1,9 @@
+windows系统使用wsl安装redis
+
+ubuntu系统：sudo apt-get install redis
+
+安装完成后，输入命令：redis-cli 即可进入redis-cli命令行界面
+
+输入：monitor 得到 ok 的返回代表正常
+
+后续redis有消息时就可看到消息log
