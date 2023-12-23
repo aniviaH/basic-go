@@ -69,10 +69,11 @@ func initWebServer() *gin.Engine {
 		//出于安全考虑，这里不要用任意*号，公司里的域名个数一般都能容易列出来的。
 		//另外前端xhr请求带了 withCredentials 属性时，也不能写*，否则会被浏览器认为跨域不通过而拦截
 		//所以不要用*
-		AllowOrigins:  []string{"http://localhost:3000"},
-		AllowMethods:  []string{"POST", "GET", "OPTIONS"},        // 对应请求投头中的 Accecss-Control-Request-Method, 默认值是全部的simple methods
-		AllowHeaders:  []string{"Content-Type", "authorization"}, // 对应请求投头中的 Accecss-Control-Request-Headers
-		ExposeHeaders: []string{"Content-Length"},
+		AllowOrigins: []string{"http://localhost:3000"},
+		AllowMethods: []string{"POST", "GET", "OPTIONS"},        // 对应请求投头中的 Accecss-Control-Request-Method, 默认值是全部的simple methods
+		AllowHeaders: []string{"Content-Type", "Authorization"}, // 对应请求投头中的 Accecss-Control-Request-Headers
+		// 这里控制哪些自定义设置的响应头可以被客户端获取，未在这个列表里的前端不能拿到
+		ExposeHeaders: []string{"Content-Length", "x-jwt-token"},
 		// 是否允许带 cookie 之类的东西
 		AllowCredentials: true,
 		// 如果 origin 判断逻辑复杂，可以用这个代替 AllowOrigins
@@ -129,11 +130,16 @@ func initWebServer() *gin.Engine {
 	// v3: 推荐写法
 	// 作为中间件的提供者，如果你的设计有问题需要修改，那么使用你的中间件用户都得进行更新，这会是影响很大。所以中间件设计之初应该考虑好兼容性和扩展性
 	// 如下的写法，它可以做到比较好的兼容性和扩展性
-	server.Use(
-		middleware.NewLoginMiddlewareBuilder().
-			IgnorePaths("/users/login").
-			IgnorePaths("/users/signup").
-			Build())
+	//server.Use(
+	//	middleware.NewLoginMiddlewareBuilder().
+	//		IgnorePaths("/users/login").
+	//		IgnorePaths("/users/signup").
+	//		Build())
+	// 使用JWT的登录校验middleware拦截器
+	server.Use(middleware.NewLoginJWTMiddlewareBuilder().
+		IgnorePaths("/users/login").
+		IgnorePaths("/users/signup").
+		Build())
 	// 校验登录态 - 可以封装一下
 	//server.Use(func(ctx *gin.Context) {
 	//	// 不需要登录校验的路由
