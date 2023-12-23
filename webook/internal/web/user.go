@@ -220,6 +220,13 @@ func (u *UserHandler) Login(ctx *gin.Context) {
 	sess := sessions.Default(ctx)
 	// 设置放在 session 里面的值
 	sess.Set("userId", user.Id)
+	sess.Options(sessions.Options{
+		//Secure:   true,
+		//HttpOnly: true,
+		//Path: "/products",
+		// 60s过期
+		MaxAge: 60 * 60 * 24,
+	})
 	// 需要调一下Save方法
 	sessionSaveErr := sess.Save()
 	if sessionSaveErr != nil {
@@ -228,6 +235,23 @@ func (u *UserHandler) Login(ctx *gin.Context) {
 	}
 
 	ctx.String(http.StatusOK, "登录成功")
+	return
+}
+
+func (u *UserHandler) Logout(ctx *gin.Context) {
+	sess := sessions.Default(ctx)
+	sess.Options(sessions.Options{
+		// 让session的cookie失效
+		MaxAge: -1,
+	})
+	sessionSaveErr := sess.Save()
+
+	if sessionSaveErr != nil {
+		ctx.String(http.StatusInternalServerError, "退出登录失败")
+		return
+	}
+
+	ctx.String(http.StatusOK, "退出登录成功")
 	return
 }
 
