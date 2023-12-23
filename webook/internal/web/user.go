@@ -224,8 +224,10 @@ func (u *UserHandler) Login(ctx *gin.Context) {
 		//Secure:   true,
 		//HttpOnly: true,
 		//Path: "/products",
-		// 60s过期
-		MaxAge: 60 * 60 * 24,
+		// 60s过期(单位是s)
+		//MaxAge: 60,
+		// 一分钟过期
+		MaxAge: 60 * 2,
 	})
 	// 需要调一下Save方法
 	sessionSaveErr := sess.Save()
