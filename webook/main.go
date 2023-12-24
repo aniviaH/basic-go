@@ -7,10 +7,12 @@ import (
 	"github.com/aniviaH/basic-go/webook/internal/service"
 	"github.com/aniviaH/basic-go/webook/internal/web"
 	"github.com/aniviaH/basic-go/webook/internal/web/middleware"
+	"github.com/aniviaH/basic-go/webook/pkg/ginx/middlewares/ratelimit"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/sessions"
-	"github.com/gin-contrib/sessions/redis"
+	"github.com/gin-contrib/sessions/memstore"
 	"github.com/gin-gonic/gin"
+	"github.com/redis/go-redis/v9"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"strings"
@@ -64,6 +66,12 @@ func initWebServer() *gin.Engine {
 		println("第三个 middleware")
 	})
 
+	// 基于redis的限流插件(使用redis进行统计判断是否达到限流的条件)
+	redisClient := redis.NewClient(&redis.Options{
+		Addr: "localhost:6379",
+	})
+	server.Use(ratelimit.NewBuilder(redisClient, time.Second, 100).Build())
+
 	// middleware方案：github.com/gin-gonic/contrib/gin-cors
 	server.Use(cors.New(cors.Config{
 		//出于安全考虑，这里不要用任意*号，公司里的域名个数一般都能容易列出来的。
@@ -94,7 +102,7 @@ func initWebServer() *gin.Engine {
 	// 基于内存的实现，第一个参数是 authentication key，最好是 32 或者 64 位
 	// 第二个参数是 encryption key
 	//store := memstore.NewStore([]byte("authentication-key-123456"), []byte("encryption-key-123456"))
-	//store := memstore.NewStore([]byte("cBjJFkt0Kgs6CKD4cr6QYYd8qIaQi8pds7Py3kYEkibIzjf1hRFe3EnLoCfhk2BI"), []byte("yICPpbp2QnPmCfHGEryXLXFtkCyEsela"))
+	store := memstore.NewStore([]byte("cBjJFkt0Kgs6CKD4cr6QYYd8qIaQi8pds7Py3kYEkibIzjf1hRFe3EnLoCfhk2BI"), []byte("yICPpbp2QnPmCfHGEryXLXFtkCyEsela"))
 
 	// 基于redis的实现
 	// 第一个参数是最大空闲连接数量
@@ -102,10 +110,10 @@ func initWebServer() *gin.Engine {
 	// 第三个参数是host:端口
 	// 第四哥参数是密码
 	// 最后两个就是两个key
-	store, err := redis.NewStore(16, "tcp", "localhost:6379", "", []byte("cBjJFkt0Kgs6CKD4cr6QYYd8qIaQi8pds7Py3kYEkibIzjf1hRFe3EnLoCfhk2BI"), []byte("yICPpbp2QnPmCfHGEryXLXFtkCyEsela"))
-	if err != nil {
-		panic(err)
-	}
+	//store, err := redis.NewStore(16, "tcp", "localhost:6379", "", []byte("cBjJFkt0Kgs6CKD4cr6QYYd8qIaQi8pds7Py3kYEkibIzjf1hRFe3EnLoCfhk2BI"), []byte("yICPpbp2QnPmCfHGEryXLXFtkCyEsela"))
+	//if err != nil {
+	//	panic(err)
+	//}
 
 	// cookie的名字叫mysession
 	server.Use(sessions.Sessions("mysession", store))
