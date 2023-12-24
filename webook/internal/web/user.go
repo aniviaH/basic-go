@@ -10,6 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/golang-jwt/jwt/v5"
 	"net/http"
+	"time"
 )
 
 // UserHandler 我准备在它上面定义跟用户有关的路由
@@ -83,7 +84,8 @@ func (u *UserHandler) RegisterRoutes(server *gin.Engine) {
 	//server.GET("/users/:id", func(context *gin.Context) {
 	//
 	//})
-	server.GET("/users/profile", u.Profile)
+	//server.GET("/users/profile", u.Profile)
+	server.GET("/users/profile", u.ProfileJWT)
 
 	//server.Run(":8080")
 
@@ -268,9 +270,18 @@ func (u *UserHandler) LoginJWT(ctx *gin.Context) {
 	// 步骤2
 	// 在这里用 JWT 设置登录态
 	// 生成一个 JWT token
-	// 下一节课，如果我要在 JWT token 里面带我个人数据，该怎么带？
+	// 如果我要在 JWT token 里面带我个人数据，该怎么带？
 	// 比如，我要带 userId
-	token := jwt.New(jwt.SigningMethodHS512)
+
+	claims := UserClaims{
+		Uid: user.Id,
+		RegisteredClaims: jwt.RegisteredClaims{
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Minute)),
+		},
+	}
+	//token := jwt.New(jwt.SigningMethodHS512)
+	// token中保存用户数据claims
+	token := jwt.NewWithClaims(jwt.SigningMethodHS512, claims)
 	tokenStr, err := token.SignedString([]byte("yICPpbp2QnPmCfHGEryXLXFtkCyEsela"))
 	if err != nil {
 		ctx.String(http.StatusInternalServerError, "系统错误 ")
@@ -310,4 +321,46 @@ func (u *UserHandler) Edit(ctx *gin.Context) {
 func (u *UserHandler) Profile(ctx *gin.Context) {
 	ctx.String(http.StatusOK, "这是你的profile")
 	return
+}
+
+func (u *UserHandler) ProfileJWT(ctx *gin.Context) {
+	claims, _ := ctx.Get("claims")
+	userId, _ := ctx.Get("userId")
+	// 你可以断定，必然有 claims
+	//if !exists1 {
+	//	// 异常情况，可以在这里做监控
+	//	fmt.Println("用户信息不存在")
+	//	ctx.String(http.StatusInternalServerError, "用户信息不存在")
+	//	return
+	//}
+	//if !exists2 {
+	//	// 异常情况，可以在这里做监控
+	//	fmt.Println("userId不存在")
+	//	ctx.String(http.StatusInternalServerError, "userId不存在")
+	//	return
+	//}
+	//fmt.Println(claims, userId)
+
+	// ctx.Get 获取的返回值数据类型是 any，所以需要做下断言
+	claimsAsset, ok := claims.(*UserClaims)
+	if !ok {
+		// 异常情况，可以在这里做监控
+		fmt.Println("用户信息不存在")
+		ctx.String(http.StatusInternalServerError, "用户信息不存在")
+		return
+	}
+	fmt.Println(claimsAsset.Uid, userId)
+
+	// 后面继续补充 Profile 的其它代码
+	ctx.String(http.StatusOK, "这是你的profile")
+	return
+}
+
+type UserClaims struct {
+	// 组合，实现 jwt.Claims 接口
+	jwt.RegisteredClaims
+	// 声明你自己的要放进去 token 里面的数据
+	Uid int64
+	// 自己随便加
+	// 一些敏感的信息不要放到里面
 }
