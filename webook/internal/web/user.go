@@ -276,8 +276,9 @@ func (u *UserHandler) LoginJWT(ctx *gin.Context) {
 	claims := UserClaims{
 		Uid: user.Id,
 		RegisteredClaims: jwt.RegisteredClaims{
-			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Minute)),
+			ExpiresAt: jwt.NewNumericDate(time.Now().Add(time.Minute * 10)),
 		},
+		UserAgent: ctx.Request.UserAgent(),
 	}
 	//token := jwt.New(jwt.SigningMethodHS512)
 	// token中保存用户数据claims
@@ -363,4 +364,5 @@ type UserClaims struct {
 	Uid int64
 	// 自己随便加
 	// 一些敏感的信息不要放到里面
+	UserAgent string
 }
