@@ -1,0 +1,85 @@
+1. 书写k8s配置文件 (deployment文档：https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webook
+spec:
+  # 副本数量
+  replicas: 3
+  selector:
+    matchLabels:
+      app: webook
+  # template 描述的是你的 POD 是什么样的
+  template:
+    metadata:
+      name: webook
+      labels:
+        # 因为上面 selector 里面我们找的就是这个 label
+        app: webook
+    # POD 的具体信息
+    spec:
+      # POD 里面运行的 container
+      containers:
+        - name: webook
+          image: flycash/webook:v0.0.1
+
+2. 执行 kubectl 命令 (需要先安装kubectl（k8s工具）: https://kubernetes.io/docs/tasks/tools/install-kubectl-windows/)
+
+PS G:\Go\Go-dengming\my-workspaces\basic-go\webook> kubectl apply -f .\k8s-webook-deployment.yaml
+deployment.apps/webook created
+PS G:\Go\Go-dengming\my-workspaces\basic-go\webook> kubectl get deployments
+NAME     READY   UP-TO-DATE   AVAILABLE   AGE
+webook   0/3     3            0           39s
+PS G:\Go\Go-dengming\my-workspaces\basic-go\webook>
+
+3. kubectl 常用命令
+
+kubectl get deployments
+
+kubectl get pods
+
+
+4. pods启动报错分析
+
+PS G:\Go\Go-dengming\my-workspaces\basic-go\webook> kubectl get deployments
+NAME     READY   UP-TO-DATE   AVAILABLE   AGE
+webook   0/3     3            0           25s
+PS G:\Go\Go-dengming\my-workspaces\basic-go\webook> kubectl get pods
+NAME                      READY   STATUS             RESTARTS      AGE
+webook-64df75798d-4w6s7   0/1     CrashLoopBackOff   2 (19s ago)   36s
+webook-64df75798d-q56v7   0/1     CrashLoopBackOff   2 (18s ago)   36s
+webook-64df75798d-r6gh8   0/1     CrashLoopBackOff   2 (19s ago)   36s
+PS G:\Go\Go-dengming\my-workspaces\basic-go\webook>
+
+查看 deployments 和 pods 时发现, deployments/webook 的 READY 0/3, 三个 pods 的也都没起来，STATUS 显示 CrashLoopBackOff，后面 RESTARTS 记录着一直在重试的次数
+
+4.1 进行查看日志：kubectl logs POD名
+
+PS G:\Go\Go-dengming\my-workspaces\basic-go\webook> kubectl logs webook-64df75798d-4w6s7
+exec /app/webook: no such file or directory
+PS G:\Go\Go-dengming\my-workspaces\basic-go\webook> kubectl logs webook-64df75798d-q56v7
+exec /app/webook: no such file or directory
+PS G:\Go\Go-dengming\my-workspaces\basic-go\webook> kubectl logs webook-64df75798d-r6gh8
+exec /app/webook: no such file or directory
+
+最后经分析，发现是go build生成出来的可执行文件不是linux的，文件虽然在docker 镜像中已经COPY过去了，但是其执行时因为文件格式不对问题，导致访问不到。
+
+我一开始的go build 命令是：
+set env GOOS=linux
+set env GOARCH=amd64
+go build -o webook .
+
+当分析到可能是文件格式的原因时候，进行分析和修改go build方式
+
+查看了自己的 go env
+PS G:\Go\Go-dengming\my-workspaces\basic-go\webook> go env GOOS
+windows
+PS G:\Go\Go-dengming\my-workspaces\basic-go\webook> go env GOARCH
+amd64
+
+进行修改
+PS G:\Go\Go-dengming\my-workspaces\basic-go\webook> go env -w GOOS=linux
+PS G:\Go\Go-dengming\my-workspaces\basic-go\webook> go env -w GOARCH=arm
+
+重新build之后，再执行docker build 出来的镜像，再进行运行(docker run image 或 kubectl apply 都ok了)就能成功了

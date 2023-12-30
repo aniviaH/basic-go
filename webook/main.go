@@ -43,7 +43,7 @@ func mainBase() {
 	server := gin.Default()
 
 	server.GET("/hello", func(ctx *gin.Context) {
-		ctx.String(http.StatusOK, "hello, world")
+		ctx.String(http.StatusOK, "hello, world 2023-12-30 18:41")
 	})
 
 	server.Run(":8080")
