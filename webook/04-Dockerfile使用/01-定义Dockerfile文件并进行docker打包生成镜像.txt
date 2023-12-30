@@ -1,0 +1,71 @@
+将应用打包好对应系统的执行文件，当前打包出的文件为 webook 文件(set GOOS=linux set GOARCH=arm  go build -o webook .)
+
+1. 编写 Dockerfile 文件，docker build 命令会基于该文件定义的指令进行执行和打包生成镜像
+
+# 基础镜像
+FROM ubuntu:20.04
+
+# 将编译后的linux文件 webook 复制(打包进来)到镜像，放到工作目录 /app 目录下
+COPY webook /app/webook
+# 设定我的工作目录
+WORKDIR /app
+
+# CMD 是执行命令，可以镜像启动之前执行一些命令
+# ENTRYPOINT 进来就执行这条命令
+ENTRYPOINT ["/app/webook"]
+
+
+2. 执行 docker build 命令
+
+PS G:\Go\Go-dengming\my-workspaces\basic-go\webook> docker build  -t flycash/webook:v0.0.1 .
+[+] Building 3.1s (8/8) FINISHED                                                                                                                                                           docker:default
+ => [internal] load .dockerignore                                                                                                                                                                    0.0s
+ => => transferring context: 2B                                                                                                                                                                      0.0s
+ => [internal] load build definition from Dockerfile                                                                                                                                                 0.0s
+ => => transferring dockerfile: 386B                                                                                                                                                                 0.0s
+ => [internal] load metadata for docker.io/library/ubuntu:20.04                                                                                                                                      1.0s
+ => [internal] load build context                                                                                                                                                                    0.0s
+ => => transferring context: 30B                                                                                                                                                                     0.0s
+ => [2/3] COPY webook /app/webook                                                                                                                                                                    1.9s
+ => [3/3] WORKDIR /app                                                                                                                                                                               0.0s
+ => exporting to image                                                                                                                                                                               0.1s
+ => => exporting layers                                                                                                                                                                              0.1s
+ => => writing image sha256:c8727edac288fa88c0cd44af38e10ab9078f76caf53d5295ab3b6d37d0fb4941                                                                                                         0.0s
+ => => naming to docker.io/flycash/webook:v0.0.1                                                                                                                                                     0.0s
+
+    digest           │  c8727edac288                   │
+  Base image         │  ubuntu:20.04                   │    0C     0H     0M     7L
+  Updated base image │  ubuntu:24.04                   │    0C     0H     0M     0L
+                     │                                 │                         -7
+
+What's Next?
+  View vulnerabilities → docker scout cves local://flycash/webook:v0.0.1
+  View base image update recommendations → docker scout recommendations local://flycash/webook:v0.0.1
+  Include policy results in your quickview by supplying an organization → docker scout quickview local://flycash/webook:v0.0.1 --org <organization>
+docker/desktop-storage-provisioner                        v2.0                                                                         99f89471f470   2 years ago          41.9MB
+PS G:\Go\Go-dengming\my-workspaces\basic-go\webook>
+
+3. 查看镜像
+
+PS G:\Go\Go-dengming\my-workspaces\basic-go\webook> docker images flycash/webook
+REPOSITORY       TAG       IMAGE ID       CREATED         SIZE
+flycash/webook   v0.0.1    c8727edac288   8 minutes ago   84.3MB
+PS G:\Go\Go-dengming\my-workspaces\basic-go\webook> docker images
+REPOSITORY                                                TAG                                                                          IMAGE ID       CREATED         SIZE
+flycash/webook                                            v0.0.1                                                                       c8727edac288   8 minutes ago   84.3MB
+nginx                                                     latest                                                                       593aee2afb64   2 months ago    187MB
+bitnami/redis                                             latest                                                                       70144fd6cffa   2 months ago    95.2MB
+hubproxy.docker.internal:5555/docker/desktop-kubernetes   kubernetes-v1.27.2-cni-v1.2.0-critools-v1.27.0-cri-dockerd-v0.3.2-1-debian   c763812a4530   6 months ago    418MB
+registry.k8s.io/kube-apiserver                            v1.27.2                                                                      c5b13e4f7806   7 months ago    121MB
+registry.k8s.io/kube-scheduler                            v1.27.2                                                                      89e70da428d2   7 months ago    58.4MB
+registry.k8s.io/kube-controller-manager                   v1.27.2                                                                      ac2b7465ebba   7 months ago    112MB
+registry.k8s.io/kube-proxy                                v1.27.2                                                                      b8aa50768fd6   7 months ago    71.1MB
+docker/desktop-vpnkit-controller                          dc331cb22850be0cdd97c84a9cfecaf44a1afb6e                                     556098075b3d   7 months ago    36.2MB
+nginx/docker-extension                                    0.0.3                                                                        41d3d0d7d940   8 months ago    7.53MB
+registry.k8s.io/coredns/coredns                           v1.10.1                                                                      ead0a4a53df8   10 months ago   53.6MB
+registry.k8s.io/etcd                                      3.5.7-0                                                                      86b6af7dd652   11 months ago   296MB
+registry.k8s.io/pause                                     3.9                                                                          e6f181688397   14 months ago   744kB
+mysql                                                     8.0.29                                                                       33037edcac9b   17 months ago   444MB
+centos                                                    latest                                                                       5d0da3dc9764   2 years ago     231MB
+docker/desktop-storage-provisioner                        v2.0                                                                         99f89471f470   2 years ago     41.9MB
+PS G:\Go\Go-dengming\my-workspaces\basic-go\webook>

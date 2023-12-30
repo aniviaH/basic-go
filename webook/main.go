@@ -15,6 +15,7 @@ import (
 	"github.com/redis/go-redis/v9"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
+	"net/http"
 	"strings"
 	"time"
 )
@@ -33,6 +34,22 @@ func Test(keyPairs ...[]byte) int {
 }
 
 func main() {
+	//mainWebook()
+
+	mainBase()
+}
+
+func mainBase() {
+	server := gin.Default()
+
+	server.GET("/hello", func(ctx *gin.Context) {
+		ctx.String(http.StatusOK, "hello, world")
+	})
+
+	server.Run(":8080")
+}
+
+func mainWebook() {
 	Test([]byte("abcde"), []byte("hjk"))
 
 	//defaultLogicComment()
