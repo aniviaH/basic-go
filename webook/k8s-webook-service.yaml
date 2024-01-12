@@ -1,0 +1,28 @@
+apiVersion: v1
+kind: Service
+metadata:
+  # 代表这是我们的 webook 本体
+  name: webook
+# 规格说明，也即是详细说明这个服务是一个怎样的服务
+spec:
+  type: LoadBalancer
+  selector:
+    app: webook
+  ports:
+    - protocol: TCP
+      # name 只是对应这个配置的端口规则的一个名字，可以随意，用于标识或者区分不同端口的使用
+      name: http
+      # 服务端口
+      port: 80
+      # 访问pod里的container的端口(我这边转发请求的时候，应该转发到 Pod 上的哪个端口。)
+      targetPort: 8080
+      # 如果这里配置为pods内容器未提供的端口，如8081，则service访问不到对应端口的container，则服务调用会无法返回
+#      targetPort: 8081
+    - protocol: TCP
+      name: https
+      port: 443
+      targetPort: 8080
+    - protocol: TCP
+      name: http-admin
+      port: 81
+      targetPort: 8080

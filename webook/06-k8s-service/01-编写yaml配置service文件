@@ -1,0 +1,43 @@
+1. 新建文件
+
+目录 -> new -> Kubernetes Resource -> Service 新建文件，命名为 k8s-webook-service
+得到 k8s-webook-service.yaml 的默认配置文件，如下：
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: Title
+spec:
+  selector:
+    app: Title
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+  type: NodePort
+
+2. 一些配置项，修改为与之前的 deployment 配置文件进行对应，如下：
+
+apiVersion: v1
+kind: Service
+metadata:
+  name: webook
+spec:
+  type: LoadBalancer
+  selector:
+    app: webook
+  ports:
+    - protocol: TCP
+      port: 80
+      targetPort: 8080
+
+3. 执行 kubectl apply  -f  .\k8s-webook-service.yaml
+4. 查看 kubectl get services
+
+PS G:\Go\Go-dengming\my-workspaces\basic-go\webook> kubectl apply  -f  .\k8s-webook-service.yaml
+service/webook created
+PS G:\Go\Go-dengming\my-workspaces\basic-go\webook> kubectl get services
+NAME         TYPE           CLUSTER-IP      EXTERNAL-IP   PORT(S)        AGE
+kubernetes   ClusterIP      10.96.0.1       <none>        443/TCP        13d
+webook       LoadBalancer   10.101.137.29   localhost     80:30616/TCP   57s
+PS G:\Go\Go-dengming\my-workspaces\basic-go\webook>
