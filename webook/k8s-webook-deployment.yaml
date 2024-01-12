@@ -11,18 +11,18 @@ spec:
   # template 描述的是你的 POD 是什么样的
   template:
     metadata:
-      name: webook
       labels:
-        # 因为上面 selector 里面我们找的就是这个 label
+        # 因为上面 selector-matchLabels 里面我们找的就是这个 label，两处需要完全一样
         app: webook
     # POD 的具体信息
     spec:
       # POD 里面运行的 container
       containers:
         - name: webook
-          image: flycash/webook:v0.2.8
+          image: liuhuan/webook:v1.0.1
           ports:
             # 需要对应你的应用中服务监听的端口号。在我们的main.go中写死了8080
             - containerPort: 8080
+          # 一个pod里可以跑多个container
 #        - name: mysql
 #          image: mysql:8.0

@@ -1,3 +1,5 @@
+编写 Deployment
+
 1. 书写k8s配置文件 (deployment文档：https://kubernetes.io/docs/concepts/workloads/controllers/deployment/)
 
 apiVersion: apps/v1
@@ -22,9 +24,10 @@ spec:
       # POD 里面运行的 container
       containers:
         - name: webook
-          image: flycash/webook:v0.0.1
+          image: liuhuan/webook:v1.0.0
 
-2. 执行 kubectl 命令 (需要先安装kubectl（k8s工具）: https://kubernetes.io/docs/tasks/tools/install-kubectl-windows/)
+2. 执行 kubectl 命令
+(需要先安装kubectl（k8s工具）: https://kubernetes.io/docs/tasks/tools/install-kubectl-windows/)
 
 PS G:\Go\Go-dengming\my-workspaces\basic-go\webook> kubectl apply -f .\k8s-webook-deployment.yaml
 deployment.apps/webook created
@@ -39,6 +42,9 @@ kubectl get deployments
 
 kubectl get pods
 
+kubectl delete  deployment NAME 删除对应名字的deployment，其下面的全部PODS也会被删除
+
+kubectl delete pods --all
 
 4. pods启动报错分析
 
@@ -83,3 +89,19 @@ PS G:\Go\Go-dengming\my-workspaces\basic-go\webook> go env -w GOOS=linux
 PS G:\Go\Go-dengming\my-workspaces\basic-go\webook> go env -w GOARCH=arm
 
 重新build之后，再执行docker build 出来的镜像，再进行运行(docker run image 或 kubectl apply 都ok了)就能成功了
+
+4. 成功执行 kubectl apply -f .\k8s-webook-deployment.yaml 后查看信息 deployments 和 pods 信息
+
+PS G:\Go\Go-dengming\my-workspaces\basic-go\webook> kubectl get deployments
+NAME     READY   UP-TO-DATE   AVAILABLE   AGE
+webook   3/3     3            3           45s
+
+PS G:\Go\Go-dengming\my-workspaces\basic-go\webook> kubectl get pods
+NAME                      READY   STATUS    RESTARTS   AGE
+webook-7c98857f7b-5pkd6   1/1     Running   0          48s
+webook-7c98857f7b-j6bvb   1/1     Running   0          48s
+webook-7c98857f7b-sgfz5   1/1     Running   0          48s
+PS G:\Go\Go-dengming\my-workspaces\basic-go\webook>
+
+deployments 里的 READY 全部达成，AVAILABLE 为 全部POD的数量
+pods 里的信息为每一个pod的 READY 都是达成，STATUS 为 Running，RESTARTS 没有内容

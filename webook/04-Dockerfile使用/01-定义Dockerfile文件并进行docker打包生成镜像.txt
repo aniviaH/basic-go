@@ -1,6 +1,9 @@
-将应用打包好对应系统的执行文件，当前打包出的文件为 webook 文件(set GOOS=linux set GOARCH=arm  go build -o webook .)
+1. 将应用打包好对应系统的执行文件，当前打包出的文件为 webook 文件（linux可执行二进制文件）
+go env -w GOOS=linux
+go env -w GOARCH=arm
+go build -o webook .
 
-1. 编写 Dockerfile 文件，docker build 命令会基于该文件定义的指令进行执行和打包生成镜像
+2. 编写 Dockerfile 文件，docker build 命令会基于该文件定义的指令进行执行和打包生成镜像
 
 # 基础镜像
 FROM ubuntu:20.04
@@ -15,7 +18,7 @@ WORKDIR /app
 ENTRYPOINT ["/app/webook"]
 
 
-2. 执行 docker build 命令
+2. 执行 docker build 命令，根据Dockerfile打包生成对应的镜像文件
 
 PS G:\Go\Go-dengming\my-workspaces\basic-go\webook> docker build  -t flycash/webook:v0.0.1 .
 [+] Building 3.1s (8/8) FINISHED                                                                                                                                                           docker:default
@@ -50,6 +53,7 @@ PS G:\Go\Go-dengming\my-workspaces\basic-go\webook>
 PS G:\Go\Go-dengming\my-workspaces\basic-go\webook> docker images flycash/webook
 REPOSITORY       TAG       IMAGE ID       CREATED         SIZE
 flycash/webook   v0.0.1    c8727edac288   8 minutes ago   84.3MB
+
 PS G:\Go\Go-dengming\my-workspaces\basic-go\webook> docker images
 REPOSITORY                                                TAG                                                                          IMAGE ID       CREATED         SIZE
 flycash/webook                                            v0.0.1                                                                       c8727edac288   8 minutes ago   84.3MB

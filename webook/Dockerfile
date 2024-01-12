@@ -2,7 +2,7 @@
 FROM ubuntu:20.04
 
 # 将编译后的linux文件 webook 复制(打包进来)到镜像，放到工作目录 /app 目录下
-COPY webook /app/webook
+COPY webook-linux-arm /app/webook
 # 设定我的工作目录
 WORKDIR /app
 
