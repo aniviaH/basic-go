@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: webook-redis
+spec:
+  selector:
+    app: webook-redis
+  ports:
+    - protocol: TCP
+      # k8s内部访问的端口
+      port: 3310
+      # 访问pod的端口
+      targetPort: 6379
+      # 对外暴露的端口，外部（k8s外面）可通过该端口进行访问
+      nodePort: 30003
+  type: NodePort
+  
