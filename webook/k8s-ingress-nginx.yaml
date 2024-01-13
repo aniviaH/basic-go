@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: webook-ingress
+spec:
+  # 告诉他，用 nginx。如果有别的自研的，也可以配成对应的
+  ingressClassName: nginx
+  rules:
+    # host 是 live.webook.com 的时候，命中我这一条
+    - host: live.webook.com
+#    - host: localhost
+      http:
+        paths:
+          # 请求路径的前缀是 / 的时候，将流量转发到后面的 webook service上，端口是81
+          - backend:
+              service:
+                # 与要转发到的service的名称对应，这里为k8s-webook-service配置的service的名称
+                name: webook
+                port:
+                  number: 81
+            pathType: Prefix
+            path: /

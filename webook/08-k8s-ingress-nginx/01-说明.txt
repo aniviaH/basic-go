@@ -1,0 +1,9 @@
+1. 书写 k8s-ingress-nginx.yaml 文件
+
+2. kubectl apply -f k8s-ingress-nginx
+
+3. 配置host文件-因为配置文件里用了假的域名
+127.0.0.1 live.webook.com
+
+4. 浏览器访问
+http://live.webook.com:81/hello
