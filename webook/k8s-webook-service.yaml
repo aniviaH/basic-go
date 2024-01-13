@@ -26,3 +26,7 @@ spec:
       name: http-admin
       port: 81
       targetPort: 8080
+    - protocol: TCP
+      name: http-82
+      port: 82
+      targetPort: 8080

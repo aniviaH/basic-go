@@ -2,6 +2,7 @@ package main
 
 import (
 	"fmt"
+	"github.com/aniviaH/basic-go/webook/config"
 	"github.com/aniviaH/basic-go/webook/internal/repository"
 	"github.com/aniviaH/basic-go/webook/internal/repository/dao"
 	"github.com/aniviaH/basic-go/webook/internal/service"
@@ -85,7 +86,7 @@ func initWebServer() *gin.Engine {
 
 	// 基于redis的限流插件(使用redis进行统计判断是否达到限流的条件)
 	redisClient := redis.NewClient(&redis.Options{
-		Addr: "webook-redis:3310",
+		Addr: config.Config.Redis.Addr,
 	})
 	server.Use(ratelimit.NewBuilder(redisClient, time.Second, 100).Build())
 
@@ -196,7 +197,7 @@ func initUser(db *gorm.DB) *web.UserHandler {
 
 func initDb() *gorm.DB {
 	// 初始化db
-	db, err := gorm.Open(mysql.Open("root:root@tcp(webook-mysql:3309)/webook"))
+	db, err := gorm.Open(mysql.Open(config.Config.DB.DSN))
 	if err != nil {
 		// mysql启动异常，直接panic，将当前goroutine直接结束
 		// 只在初始化过程中panic，相当于整个 goroutine 结束

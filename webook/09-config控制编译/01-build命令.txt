@@ -1,0 +1,5 @@
+# 指定带 k8s 标签进行编译，其会去找带对应tags的文件(/config/k8s.go)
+go build -tags=k8s -o webook .
+
+# 不指定，则找不带标签的文件(/config/dev.go)
+go build  -o webook .
