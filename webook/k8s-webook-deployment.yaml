@@ -4,7 +4,7 @@ metadata:
   name: webook
 spec:
   # 副本数量
-  replicas: 3
+  replicas: 2
   selector:
     matchLabels:
       app: webook
@@ -19,10 +19,10 @@ spec:
       # POD 里面运行的 container
       containers:
         - name: webook
-          image: liuhuan/webook:v2.0.1
+          image: liuhuan/webook:v2.0.2
           ports:
             # 需要对应你的应用中服务监听的端口号。在我们的main.go中写死了8080
-            - containerPort: 8080
+            - containerPort: 8081
           # 一个pod里可以跑多个container
 #        - name: mysql
 #          image: mysql:8.0

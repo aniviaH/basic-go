@@ -68,7 +68,7 @@ func mainWebook() {
 	uh.RegisterRoutes(server)
 
 	// 启动服务
-	server.Run(":8080")
+	server.Run(":8081")
 }
 
 func initWebServer() *gin.Engine {

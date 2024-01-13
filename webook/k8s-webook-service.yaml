@@ -11,22 +11,8 @@ spec:
   ports:
     - protocol: TCP
       # name 只是对应这个配置的端口规则的一个名字，可以随意，用于标识或者区分不同端口的使用
-      name: http
+      name: homework03
       # 服务端口
-      port: 80
+      port: 8081
       # 访问pod里的container的端口(我这边转发请求的时候，应该转发到 Pod 上的哪个端口。)
-      targetPort: 8080
-      # 如果这里配置为pods内容器未提供的端口，如8081，则service访问不到对应端口的container，则服务调用会无法返回
-#      targetPort: 8081
-    - protocol: TCP
-      name: https
-      port: 443
-      targetPort: 8080
-    - protocol: TCP
-      name: http-admin
-      port: 81
-      targetPort: 8080
-    - protocol: TCP
-      name: http-82
-      port: 82
-      targetPort: 8080
+      targetPort: 8081
