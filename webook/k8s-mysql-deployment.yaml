@@ -5,7 +5,7 @@ metadata:
   labels:
     app: webook-mysql
 spec:
-  replicas: 1
+  replicas: 2
   selector:
     matchLabels:
       app: webook-mysql
@@ -26,5 +26,21 @@ spec:
           env:
             - name: MYSQL_ROOT_PASSWORD
               value: root
+          # 配置持久化卷 - 运行的容器所需要的持久化卷，当前就是mysql容器所使用的持久化卷
+          # 如果mysql的配置文件改了这个路径配置，这里也要对应修改为对应的路径
+          volumeMounts:
+            # 这边要对应到 mysql 的数据储存的位置，跟mysql固定的行为关联
+            - mountPath: /var/lib/mysql
+              # !!! 这里的name需要和pod层的volumns里的name保持一样，用于确定当前container需要使用整个pod里面的哪个卷
+              name: mysql-persistent-storage
+#        - name: webook-hadoop
       restartPolicy: Always
-      
+      # 配置持久化卷 - 这里针对的是整个spec的，就是整个pod里面有哪些volumn
+      volumes:
+        - name: mysql-persistent-storage
+          persistentVolumeClaim:
+            claimName: webook-mysql-cliam-v2
+        # 可以有多个名称，用于区分pod里不同容器的存储区分
+#        - name: hadoop-persistent-storage
+#          persistentVolumeClaim:
+#            claimName: webook-hadoop-claim

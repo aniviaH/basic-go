@@ -1,0 +1,19 @@
+# pv => PersistentVolume k8s拥有的持久化卷的配置，我k8s可以提供什么
+
+apiVersion: v1
+# 这个指的是 我 k8s 有哪些 volume
+kind: PersistentVolume
+metadata:
+  name: my-local-pv-v2
+spec:
+  # 我提供的storageClassName
+  storageClassName: suibianv2
+  # 我提供的容量
+  capacity:
+    storage: 1Gi
+  # 我允许的访问模式
+  accessModes:
+    - ReadWriteOnce
+  hostPath:
+    path: "/Volumns/data"
+  

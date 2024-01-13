@@ -1,0 +1,25 @@
+# pvc => PersistentVolumeClaim  持久化卷的声明，声明我的需要
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  # 这个是指我 mysql 要用的东西
+  # 我 k8s 有什么？
+  name: webook-mysql-cliam-v2
+spec:
+  # 这个可以随便，但要和pv配置里的storageClassName配得上
+  storageClassName: suibianv2
+  # 访问模式，这里主要是控制能不能被多个 POD 读写
+  accessModes:
+    # 一个人？一个线程？还是一个POD？还是一个数据库用户？读写
+    # !!! 一个pod
+    # 一个读写
+    - ReadWriteOnce
+    # 多个读，一个写
+#    - ReadOnlyMany
+    # 多个读写
+#    - ReadWriteMany
+  # 究竟需要哪些资源
+  resources:
+    requests:
+      # 1 GB
+      storage: 1Gi
