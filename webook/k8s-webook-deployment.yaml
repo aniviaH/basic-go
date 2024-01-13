@@ -19,7 +19,7 @@ spec:
       # POD 里面运行的 container
       containers:
         - name: webook
-          image: liuhuan/webook:v1.0.1
+          image: liuhuan/webook:v2.0.0
           ports:
             # 需要对应你的应用中服务监听的端口号。在我们的main.go中写死了8080
             - containerPort: 8080
