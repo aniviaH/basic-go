@@ -1,0 +1,30 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: webook-mysql
+  labels:
+    app: webook-mysql
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: webook-mysql
+  # 描述pod
+  template:
+    metadata:
+      name: webook-mysql
+      labels:
+        app: webook-mysql
+    spec:
+      containers:
+        - name: webook-mysql
+          image: mysql:8.0
+          imagePullPolicy: IfNotPresent
+          ports:
+            # mysql默认端口3306，设置成这个端口作为pod暴露出去的端口号
+            - containerPort: 3306
+          env:
+            - name: MYSQL_ROOT_PASSWORD
+              value: root
+      restartPolicy: Always
+      

@@ -1,0 +1,52 @@
+GPT-3.5 Turbo
+K8s MySQL deployment 是指在 Kubernetes 平台上部署 MySQL 数据库的过程。通过 K8s 的 Deployment 资源，可以实现 MySQL 数据库的自动化部署、扩展和管理。
+
+在 K8s 中部署 MySQL 可以通过 YAML 文件定义 Deployment 资源，并指定 MySQL 的镜像、存储卷、环境变量等配置。同时还可以使用 Service 资源来暴露 MySQL 服务，让其他应用可以访问到该数据库。
+
+以下是一个简单的 K8s MySQL Deployment 的示例 YAML 文件：
+
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: mysql-deployment
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: mysql
+  template:
+    metadata:
+      labels:
+        app: mysql
+    spec:
+      containers:
+      - name: mysql
+        image: mysql:latest
+        env:
+        - name: MYSQL_ROOT_PASSWORD
+          value: password
+        ports:
+        - containerPort: 3306
+        volumeMounts:
+        - name: mysql-persistent-storage
+          mountPath: /var/lib/mysql
+      volumes:
+      - name: mysql-persistent-storage
+        persistentVolumeClaim:
+          claimName: mysql-pv-claim
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: mysql-service
+spec:
+  selector:
+    app: mysql
+  ports:
+    - protocol: TCP
+      port: 3306
+      targetPort: 3306
+  type: NodePort
+关于 K8s MySQL Deployment 的更多信息，你可以参考以下链接：
+
+https://kubernetes.io/docs/tutorials/stateful-application/mysql-wordpress-persistent-volume/

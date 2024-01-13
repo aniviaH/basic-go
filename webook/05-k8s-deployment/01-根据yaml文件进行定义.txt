@@ -42,9 +42,13 @@ kubectl get deployments
 
 kubectl get pods
 
+kubectl get service
+
 kubectl delete  deployment NAME 删除对应名字的deployment，其下面的全部PODS也会被删除
 
 kubectl delete pods --all
+
+kubect logs pod名 查看pod运行、异常等日志
 
 4. pods启动报错分析
 

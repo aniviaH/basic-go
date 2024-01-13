@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: webook-mysql
+spec:
+  selector:
+    app: webook-mysql
+  ports:
+    - protocol: TCP
+      # 对外暴露的端口，外部访问service的端口
+      port: 3309
+      # 访问pod的端口号
+      targetPort: 3306
+      # 如果type配置成NodePort,则这个nodePort需要配置，其会变成service的对外暴露的端口，上面的port不再是对外的，而是内部访问使用的端口
+      nodePort: 30002
+  # 使用这个type是为了方便调试
+  # type: LoadBalancer
+  type: NodePort
