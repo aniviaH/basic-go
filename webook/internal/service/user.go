@@ -15,6 +15,7 @@ var (
 
 type UserService struct {
 	repo repository.UserRepository
+	//redis *redis.Client
 }
 
 func NewUserService(repo repository.UserRepository) *UserService {
@@ -42,6 +43,19 @@ func (svc *UserService) SignUp(ctx context.Context, u domain.User) error {
 
 	// 然后就是，存起来
 	return svc.repo.Create(ctx, u)
+
+	//err := svc.repo.Create(ctx, u)
+	//if err != nil {
+	//	return err
+	//}
+	// 存redis，
+	//val, err := json.Marshal(u)
+	//if err != nil {
+	//	return err
+	//}
+	// 注意这边，要求 u 的id 不为 0
+	//err = svc.redis.Set(ctx, fmt.Sprintf("user:info:%d", u.Id), val, time.Minute*30).Err()
+	//return err
 }
 
 func (svc *UserService) Login(ctx context.Context, email string, password string) (domain.User, error) {
@@ -65,5 +79,27 @@ func (svc *UserService) Login(ctx context.Context, email string, password string
 		// 可以在这里打个日志，比如DEBUG日志
 		return domain.User{}, ErrInvalidUserOrPassword
 	}
+	//if u.Password != password {
+	//	return domain.User{}, ErrInvalidUserOrPassword
+	//}
 	return u, err
+}
+
+func (svc *UserService) Profile(ctx context.Context, id int64) (domain.User, error) {
+	// 第一个念头
+	//val, err := svc.redis.Get(ctx, fmt.Sprintf("user:info:%d", id)).Result()
+	//if err != nil {
+	//	return domain.User{}, err
+	//}
+	//var u domain.User
+	//err = json.Unmarshal([]byte(val), &u)
+	//if err == nil {
+	//	return u, err
+	//}
+
+	u, err := svc.repo.FindById(ctx, id)
+	return u, err
+
+	// 接下来，就是从数据库里面查找
+	return domain.User{}, nil
 }
