@@ -4,12 +4,14 @@ import (
 	"fmt"
 	"github.com/aniviaH/basic-go/webook/config"
 	"github.com/aniviaH/basic-go/webook/internal/repository"
+	"github.com/aniviaH/basic-go/webook/internal/repository/cache"
 	"github.com/aniviaH/basic-go/webook/internal/repository/dao"
 	"github.com/aniviaH/basic-go/webook/internal/service"
 	"github.com/aniviaH/basic-go/webook/internal/web"
 	"github.com/aniviaH/basic-go/webook/internal/web/middleware"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-gonic/gin"
+	"github.com/redis/go-redis/v9"
 	"gorm.io/driver/mysql"
 	"gorm.io/gorm"
 	"net/http"
@@ -183,7 +185,11 @@ func initWebServer() *gin.Engine {
 
 func initUser(db *gorm.DB) *web.UserHandler {
 	userDAO := dao.NewUserDAO(db)
-	userRepo := repository.NewUserRepository(userDAO)
+	redisClient := redis.NewClient(&redis.Options{
+		Addr: config.Config.Redis.Addr,
+	})
+	userCache := cache.NewUserCache(redisClient, time.Minute*15)
+	userRepo := repository.NewUserRepository(userDAO, userCache)
 	userService := service.NewUserService(userRepo)
 	//u := &web.UserHandler{}
 	uh := web.NewUserHandler(userService)

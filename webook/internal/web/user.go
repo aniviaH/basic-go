@@ -353,7 +353,13 @@ func (u *UserHandler) ProfileJWT(ctx *gin.Context) {
 	fmt.Println(claimsAsset.Uid, userId)
 
 	// 后面继续补充 Profile 的其它代码
-	ctx.String(http.StatusOK, "这是你的profile")
+	//ctx.String(http.StatusOK, "这是你的profile")
+	user, err := u.svc.Profile(ctx, claimsAsset.Uid)
+	if err != nil {
+		ctx.String(http.StatusInternalServerError, "查询用户信息失败")
+		return
+	}
+	ctx.JSON(http.StatusOK, UserClaims{Uid: user.Id, Uemail: user.Email})
 	return
 }
 
@@ -363,6 +369,7 @@ type UserClaims struct {
 	// 声明你自己的要放进去 token 里面的数据
 	Uid int64
 	// 自己随便加
+	Uemail string
 	// 一些敏感的信息不要放到里面
 	UserAgent string
 }
